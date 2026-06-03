@@ -1,0 +1,302 @@
+using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class GameControllerLaudos : MonoBehaviour
+{
+    public PlayerController playerController;
+    public KnightController knightController;
+    public GameObject knight;
+    public WizardController wizardController;
+    public WizardNPCController wizardNPCController;
+    public GameObject wizard;
+    public KnightFormController knightFormController;
+    public Animator knightAnimator;
+    public Animator wizardAnimator;
+
+    public GameObject knightSword;
+
+    public GameObject KnightUI;
+    public GameObject WizardUI;
+    public GameObject ManaBarUI;
+    public GameObject EnergyBarUI;
+
+    // public DoorController doorController;
+
+    public DialogueController dialogueController;
+
+    public Dialogue CatharinAndViennaDialogue3;
+    public Dialogue CatharinAndBiscusDialogue2;
+
+    public GameObject mainCamera;
+
+    public GameObject wizardNPC;
+
+    public GameObject Vienna;
+    public ViennaController viennaController;
+
+    public GameObject Biscus;
+    public BiscusController biscusController;
+
+    public GameObject areaCampFire;
+    public GameObject areaCampFire2;
+    public GameObject DeathScreen;
+
+    public GameObject FadePanel;
+    public float fadeTime = 2f;
+
+    public GameObject biscusInteractionCollider;
+    public GameObject psychicSpellAnimationObject;
+
+    public GameObject psychicPinkPanel;
+
+    public void canMove()
+    {
+        knightController.canMove = true;
+        wizardController.canMove = true;
+    }
+
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        playerController.transform.position = new Vector3(22.5f, 83.8f, playerController.transform.position.z);
+        knightFormController.SetForm(KnightFormController.KnightForm.Armor);
+        knightFormController.LockForm(false);
+        playerController.canSwapCharacters = true;
+        knightController.canAttack = true;
+        knightSword.SetActive(true);
+        wizard.SetActive(false);
+        knight.SetActive(true);
+        KnightUI.SetActive(false);
+        WizardUI.SetActive(false);
+        wizardNPC.SetActive(false);
+        wizardNPC.transform.position = new Vector3(27.78f, 81.5f, wizardNPC.transform.position.z);
+        Vienna.transform.position = new Vector3(19, 82.0f, wizardNPC.transform.position.z);
+        ManaBarUI.SetActive(true);
+        EnergyBarUI.SetActive(true);
+        Vienna.SetActive(true);
+        canMove();
+        dialogueController.StartDialogue(CatharinAndViennaDialogue3);
+        biscusInteractionCollider.SetActive(true);
+        psychicSpellAnimationObject.SetActive(false);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        CheckPlayerHealth();
+    }
+
+    void CheckPlayerHealth()
+    {
+        if (playerController.health <= 0)
+        {
+            StartCoroutine(HandleDeath());
+        }
+    }
+
+    IEnumerator HandleDeath()
+    {
+        DeathScreen.SetActive(true);
+
+        playerController.health = playerController.maxHealth;
+        playerController.invincible = true;
+
+        wizardController.currentMana = wizardController.maxMana;
+        knightController.currentEnergy = knightController.maxEnergy;
+
+        yield return new WaitForSeconds(5f);
+
+        playerController.invincible = false;
+        DeathScreen.SetActive(false);
+
+    }
+
+    public void finishDialogueProcessing(Dialogue dialogue)
+    {
+        if (dialogue.name == "CatharinAndBiscusDialogue1")
+        {
+            biscusController.updateInteractionCount(1);
+            pauseMovement();
+            applyBiscusEffects();
+        }
+    }
+
+    public void finishScene()
+    {
+
+        // StartCoroutine(FadeToBlack());
+
+    }
+
+    public void pauseMovement() {
+        playerController.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+
+        knightController = knight.GetComponent<KnightController>();
+        wizardController = wizard.GetComponent<WizardController>();
+        knightAnimator = knight.GetComponent<Animator>();
+        wizardAnimator = wizard.GetComponent<Animator>();
+
+
+        // Force stop movement completely
+        knightController.isWalking = false;
+        wizardController.isWalking = false;
+
+        // Reset animator parameters
+        knightAnimator.SetBool("isWalking", false);
+        wizardAnimator.SetBool("isWalking", false);
+        knightAnimator.ResetTrigger("Attack");
+        knightAnimator.ResetTrigger("HeavyAttack");
+        wizardAnimator.ResetTrigger("Attack");
+
+        // Play idle AFTER clearing params
+        knightAnimator.Play("Idle", 0, 0f);
+        wizardAnimator.Play("Idle", 0, 0f);
+
+        if (knightController != null)
+        {
+            knightController.setCanMoveFalse();
+        }
+        if (wizardController != null)
+        {
+            wizardController.setCanMoveFalse();
+        }
+    }
+
+    public void applyBiscusEffects() {
+        // apply spell sprite
+        psychicSpellAnimationObject.SetActive(true);
+        psychicSpellAnimationObject.GetComponent<Animator>().Play("PsychicSpellAnimation");
+
+        Invoke(nameof(DisablePsychicSpellAnimation), 1.0f);
+
+        // flash pink screen object
+        psychicPinkPanel.SetActive(true);
+        StartCoroutine(FlashPsychicPanel());
+
+        Debug.Log("Flashing panel, starting dialogue processing");
+        StartCoroutine(WaitAndStartDialogue(CatharinAndBiscusDialogue2, 2f));
+    }
+
+    public void DisablePsychicSpellAnimation() {
+        psychicSpellAnimationObject.SetActive(false);
+    }
+
+    public IEnumerator WaitAndStartDialogue(Dialogue dialogue, float time) {
+        yield return new WaitForSeconds(time);
+        dialogueController.StartDialogue(dialogue);
+    }
+
+
+    public IEnumerator FadeToBlack()
+    {
+        Image img = FadePanel.GetComponent<Image>();
+
+        float elapsed = 0f;
+
+        knightController.lockCameraToPlayer = false;
+
+        Vector3 startPos = mainCamera.transform.position;
+
+        // How far upward the camera should pan
+        Vector3 targetPos = startPos + new Vector3(0f, 5f, 0f);
+
+        Color startColor = img.color;
+
+        while (elapsed < fadeTime)
+        {
+            elapsed += Time.deltaTime;
+
+            float t = Mathf.Clamp01(elapsed / fadeTime);
+
+            // Smooth easing
+            float smoothT = Mathf.SmoothStep(0f, 1f, t);
+
+            // Fade UI
+            img.color = new Color(
+                startColor.r,
+                startColor.g,
+                startColor.b,
+                smoothT
+            );
+
+            // Smooth camera pan
+            mainCamera.transform.position = Vector3.Lerp(
+                startPos,
+                targetPos,
+                smoothT
+            );
+
+            yield return null;
+        }
+
+        // Ensure final values are exact
+        img.color = new Color(startColor.r, startColor.g, startColor.b, 1f);
+        mainCamera.transform.position = targetPos;
+    }
+
+
+
+    public IEnumerator FlashPsychicPanel()
+    {
+        Image img = psychicPinkPanel.GetComponent<Image>();
+
+        Color baseColor = img.color;
+
+        // Start invisible
+        img.color = new Color(baseColor.r, baseColor.g, baseColor.b, 0f);
+
+        float flashDuration = 0.15f;
+
+        // Do two flashes
+        for (int flash = 0; flash < 2; flash++)
+        {
+            // Fade in
+            float elapsed = 0f;
+            while (elapsed < flashDuration)
+            {
+                elapsed += Time.deltaTime;
+
+                float t = Mathf.Clamp01(elapsed / flashDuration);
+                float smoothT = Mathf.SmoothStep(0f, 0.5f, t);
+
+                img.color = new Color(
+                    baseColor.r,
+                    baseColor.g,
+                    baseColor.b,
+                    smoothT
+                );
+
+                yield return null;
+            }
+
+            // Fade out
+            elapsed = 0f;
+            while (elapsed < flashDuration)
+            {
+                elapsed += Time.deltaTime;
+
+                float t = Mathf.Clamp01(elapsed / flashDuration);
+                float smoothT = Mathf.SmoothStep(0f, 0.5f, t);
+
+                img.color = new Color(
+                    baseColor.r,
+                    baseColor.g,
+                    baseColor.b,
+                    0.5f - smoothT
+                );
+
+                yield return null;
+            }
+
+            // Small pause between flashes
+            if (flash == 0)
+                yield return new WaitForSeconds(0.05f);
+        }
+
+        // Ensure invisible at end
+        img.color = new Color(baseColor.r, baseColor.g, baseColor.b, 0f);
+    }
+
+}
