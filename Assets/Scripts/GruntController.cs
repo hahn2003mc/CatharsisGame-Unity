@@ -49,8 +49,11 @@ public class GruntController : MonoBehaviour
 
     public float despawnDistance = 35f;
 
+    public GameController gameController;
+
     void Start()
     {
+        gameController = GameObject.Find("GameController").GetComponent<GameController>();
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         self.SetActive(true);
@@ -199,6 +202,7 @@ public class GruntController : MonoBehaviour
 
     public void Death()
     {
+        gameController.ConfigureEnemyCountsToUpdateAPI(EnemyEnums.GRUNT);
         rb.linearVelocity = Vector2.zero;
         self.SetActive(false);
         Destroy(gameObject);

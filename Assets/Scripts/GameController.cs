@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+    public UserDataManager userDataManager;
+    private string username;
+    private string baseUrl = "";
 
     public PlayerController playerController;
     public KnightController knightController;
@@ -45,6 +49,10 @@ public class GameController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        username = userDataManager.username;
+        StartCoroutine(PostToAPI(username, APIEndpoints.createNewAccountTemplate, "createNewAccount"));
+
+        Debug.Log("username: " + username + ", baseUrl: " + baseUrl);
         knight.SetActive(true);
         wizard.SetActive(false);
         knightUI.SetActive(true);
@@ -73,6 +81,55 @@ public class GameController : MonoBehaviour
         {
             CheckDragonHealth();
         }
+    }
+
+    private IEnumerator PostToAPI(string username, string jsonBody, string operation) {
+        jsonBody = jsonBody.Replace("INPUT_USERNAME", username);
+        Debug.Log("Posting json message: " + jsonBody + " to API...");
+        byte[] rawBody = System.Text.Encoding.UTF8.GetBytes(jsonBody);
+
+        UnityWebRequest request = null;
+        if (operation == "createNewAccount")
+        {
+            request = new UnityWebRequest(
+                APIEndpoints.createNewAccount,
+                "POST"
+            );
+        }
+        else if (operation == "updateEnemiesCounts") {
+            request = new UnityWebRequest(
+                APIEndpoints.updateEnemiesCounts,
+                "POST"
+            );
+        }
+        if (request == null) 
+        {
+            Debug.Log("invalid API operation");
+            yield break;
+        }
+        request.uploadHandler = new UploadHandlerRaw(rawBody);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader(
+            "Content-Type",
+            "application/json"
+        );
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log(request.downloadHandler.text);
+        }
+        else
+        {
+            Debug.LogError(request.error);
+        }
+    }
+
+    public void ConfigureEnemyCountsToUpdateAPI(string enemyName) {
+        string jsonBody = APIEndpoints.updateEnemiesCountsTemplate;
+        jsonBody = jsonBody.Replace("INPUT_ENEMY_NAME", enemyName);
+        StartCoroutine(PostToAPI(username, jsonBody, "updateEnemiesCounts"));
     }
 
     public void StartSkeletonSpawning()

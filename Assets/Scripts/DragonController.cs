@@ -88,13 +88,13 @@ public class DragonController : MonoBehaviour
 
     private IEnumerator RandomFireAttack()
     {
-        Debug.Log("in random fire attack");
+        // Debug.Log("in random fire attack");
         canAttack = false;
 
         // Wait a random cooldown
         float waitTime = Random.Range(fireCooldownLowerBound, fireCooldownUpperBound);
         yield return new WaitForSeconds(waitTime);
-        //Debug.Log("about to call attack");
+        // Debug.Log("about to call attack");
         FireAttack();
 
         // Allow next attack
@@ -103,7 +103,7 @@ public class DragonController : MonoBehaviour
 
     private IEnumerator RandomFireballAttack()
     {
-        Debug.Log("in random fireball attack");
+        // Debug.Log("in random fireball attack");
         while (true)
         {
 
@@ -118,7 +118,7 @@ public class DragonController : MonoBehaviour
 
     private IEnumerator RandomGruntAttack()
     {
-        Debug.Log("in random fireball attack");
+        // Debug.Log("in random fireball attack");
         while (true)
         {
 
@@ -133,7 +133,7 @@ public class DragonController : MonoBehaviour
 
     public void FireAttack()
     {
-        Debug.Log("Dragon attacked!");
+        // Debug.Log("Dragon attacked!");
         animator.SetTrigger("Attack");
     }
 
@@ -173,7 +173,7 @@ public class DragonController : MonoBehaviour
 
     public void Death()
     {
-        Debug.Log("Dragon died");
+        // Debug.Log("Dragon died");
         gameController.StartSkeletonSpawning(); // stop skeleton spawning when dragon dies
         //animator.SetTrigger("Death");
         self.SetActive(false);
