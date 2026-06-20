@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameControllerPirateShip : MonoBehaviour
@@ -94,9 +95,13 @@ public class GameControllerPirateShip : MonoBehaviour
             doorController.canLeave = true;
             wizardNPCController.updateInteractionCount(1);
         }
-        if (dialogue.name == "CatharinAndViennaDialogue2")
+        else if (dialogue.name == "CatharinAndViennaDialogue2")
         {
             downstairsDialogueCompleted = true;
+        }
+        else if (dialogue.name == "CatharinAndWizardDialogue3")
+        {
+            SceneManager.LoadScene("Laudos4");
         }
     }
 

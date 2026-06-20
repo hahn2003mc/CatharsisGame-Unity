@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameControllerLaudos : MonoBehaviour
@@ -123,6 +124,15 @@ public class GameControllerLaudos : MonoBehaviour
         }
     }
 
+    public void transferToWizardsHouseScene() {
+        StartCoroutine(waitForFadeToFinish());
+    }
+
+    private IEnumerator waitForFadeToFinish() {
+        yield return StartCoroutine(FadeToBlack());
+        SceneManager.LoadScene("Laudos4_WizardsHouse");
+    }
+
     public void finishScene()
     {
 
@@ -197,11 +207,6 @@ public class GameControllerLaudos : MonoBehaviour
 
         knightController.lockCameraToPlayer = false;
 
-        Vector3 startPos = mainCamera.transform.position;
-
-        // How far upward the camera should pan
-        Vector3 targetPos = startPos + new Vector3(0f, 5f, 0f);
-
         Color startColor = img.color;
 
         while (elapsed < fadeTime)
@@ -221,19 +226,11 @@ public class GameControllerLaudos : MonoBehaviour
                 smoothT
             );
 
-            // Smooth camera pan
-            mainCamera.transform.position = Vector3.Lerp(
-                startPos,
-                targetPos,
-                smoothT
-            );
-
             yield return null;
         }
 
         // Ensure final values are exact
         img.color = new Color(startColor.r, startColor.g, startColor.b, 1f);
-        mainCamera.transform.position = targetPos;
     }
 
 

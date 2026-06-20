@@ -3,6 +3,7 @@ using UnityEngine;
 public class CursorController : MonoBehaviour
 {
     public Texture2D cursorTexture;
+    public string sceneID;
 
     void Start()
     {

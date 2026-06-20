@@ -26,6 +26,7 @@ public class DialogueController : MonoBehaviour
 
     public GameControllerGrassWorld GameControllerGrassWorld;
     public GameControllerLaudos GameControllerLaudos;
+    public GameControllerLaudosWizardsHouse GameControllerLaudosWizardsHouse;
     public string sceneID;
 
     public bool canSpeak;
@@ -33,28 +34,31 @@ public class DialogueController : MonoBehaviour
     public void StartDialogue(Dialogue dialogue) {
         if (dialogue == null) { return; }
 
-        playerController.linearVelocity = Vector2.zero;
+        if (playerController != null)
+        {
+            playerController.linearVelocity = Vector2.zero;
 
-        knightController = knight.GetComponent<KnightController>();
-        wizardController = wizard.GetComponent<WizardController>();
-        knightAnimator = knight.GetComponent<Animator>();
-        wizardAnimator = wizard.GetComponent<Animator>();
+            knightController = knight.GetComponent<KnightController>();
+            wizardController = wizard.GetComponent<WizardController>();
+            knightAnimator = knight.GetComponent<Animator>();
+            wizardAnimator = wizard.GetComponent<Animator>();
 
 
-        // Force stop movement completely
-        knightController.isWalking = false;
-        wizardController.isWalking = false;
+            // Force stop movement completely
+            knightController.isWalking = false;
+            wizardController.isWalking = false;
 
-        // Reset animator parameters
-        knightAnimator.SetBool("isWalking", false);
-        wizardAnimator.SetBool("isWalking", false);
-        knightAnimator.ResetTrigger("Attack");
-        knightAnimator.ResetTrigger("HeavyAttack");
-        wizardAnimator.ResetTrigger("Attack");
+            // Reset animator parameters
+            knightAnimator.SetBool("isWalking", false);
+            wizardAnimator.SetBool("isWalking", false);
+            knightAnimator.ResetTrigger("Attack");
+            knightAnimator.ResetTrigger("HeavyAttack");
+            wizardAnimator.ResetTrigger("Attack");
 
-        // Play idle AFTER clearing params
-        knightAnimator.Play("Idle", 0, 0f);
-        wizardAnimator.Play("Idle", 0, 0f);
+            // Play idle AFTER clearing params
+            knightAnimator.Play("Idle", 0, 0f);
+            wizardAnimator.Play("Idle", 0, 0f);
+        }
 
         if (knightController != null)
         {
@@ -163,6 +167,41 @@ public class DialogueController : MonoBehaviour
                 // End dialogue immediately
                 DialogueContainer.SetActive(false);
                 GameControllerLaudos.canMove();
+                g_dialogue = null;
+                currentIndex = 0;
+            }
+        }
+
+        else if (sceneID == "Laudos4WizardsHouse")
+        {
+            if ((Input.GetKeyDown(KeyCode.Space)) && canSpeak)
+            {
+                //Debug.Log("Inside input function and length is " + length);
+                //Debug.Log("current index is " + currentIndex);
+                if (currentIndex < length)
+                {
+                    DialogueLine line = g_dialogue.lines[currentIndex];
+                    DialogueText.GetComponent<TextMeshProUGUI>().text = line.text;
+                    SpeakerText.GetComponent<TextMeshProUGUI>().text = line.speakerName;
+                    Portrait.GetComponent<Image>().sprite = line.portrait;
+                    canSpeak = false;
+                    StartCoroutine(PauseDialogue());
+                    currentIndex++;
+                    //Debug.Log("current index after increment is " + currentIndex);
+                }
+                else
+                {
+                    // End of dialogue
+                    DialogueContainer.SetActive(false);
+                    GameControllerLaudosWizardsHouse.finishDialogueProcessing(g_dialogue);
+                    g_dialogue = null;
+                    currentIndex = 0;
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                // End dialogue immediately
+                DialogueContainer.SetActive(false);
                 g_dialogue = null;
                 currentIndex = 0;
             }
