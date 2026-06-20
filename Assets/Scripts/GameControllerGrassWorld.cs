@@ -77,6 +77,8 @@ public class GameControllerGrassWorld : MonoBehaviour
     public GameObject FadePanel;
     public float fadeTime = 0.6f;
 
+    public int sceneCode = 2;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

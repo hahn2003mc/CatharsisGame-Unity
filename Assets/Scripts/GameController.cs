@@ -46,6 +46,8 @@ public class GameController : MonoBehaviour
 
     public GameObject Portal;
 
+    public int sceneCode = 1;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

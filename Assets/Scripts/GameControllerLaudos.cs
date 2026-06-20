@@ -51,16 +51,40 @@ public class GameControllerLaudos : MonoBehaviour
 
     public GameObject psychicPinkPanel;
 
+    public SaveManager saveManager;
+
+    public int sceneCode = 4;
+
     public void canMove()
     {
         knightController.canMove = true;
         wizardController.canMove = true;
     }
 
+    public void testSave() {
+        saveManager.Save();
+    }
+
+    private void Awake()
+    {
+        Debug.Log("GameControllerLaudos Awake");
+    }
+    private void OnEnable()
+    {
+        Debug.Log("GameControllerLaudos Enabled");
+    }
+
+    private void OnDestroy()
+    {
+        Debug.Log("GameControllerLaudos Destroyed");
+    }
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        testSave();
+
         playerController.transform.position = new Vector3(22.5f, 83.8f, playerController.transform.position.z);
         knightFormController.SetForm(KnightFormController.KnightForm.Armor);
         knightFormController.LockForm(false);

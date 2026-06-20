@@ -15,8 +15,6 @@ public class WizardController : MonoBehaviour
 
     public Camera mainCamera;
 
-    public float spellDamage = 10f;
-
     public float maxMana = 100f;
 
     public float spellManaCost = 20f;
@@ -44,6 +42,10 @@ public class WizardController : MonoBehaviour
     public GameObject healingMarker;
 
     public bool canMove;
+
+    public float spellDamage;
+    public float spellSpeed;
+    public float spellLifetime;
 
 
 
@@ -161,7 +163,7 @@ public class WizardController : MonoBehaviour
                 GameObject spellProjectile = Instantiate(spellPrefab, firePoint.position, Quaternion.identity);
 
                 WizardSpell p = spellProjectile.GetComponent<WizardSpell>();
-                p.Initialize(spellDamage, direction);
+                p.Initialize(spellDamage, direction, spellSpeed, spellLifetime);
             }
             else 
             {

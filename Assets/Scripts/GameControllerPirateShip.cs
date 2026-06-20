@@ -46,6 +46,8 @@ public class GameControllerPirateShip : MonoBehaviour
     public GameObject FadePanel;
     public float fadeTime = 2f;
 
+    public int sceneCode = 3;
+
     public void canMove()
     {
         knightController.canMove = true;

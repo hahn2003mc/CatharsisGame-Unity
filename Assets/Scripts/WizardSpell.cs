@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class WizardSpell : MonoBehaviour
 {
-    [Header("Movement")]
-    public float speed = 8f;
-    public float lifetime = 3f;
+    public WizardController wizardController;
 
-    [Header("Combat")]
-    public float damage = 10f;
+    public float speed;
+    public float lifetime;
+
+    public float damage;
 
     private Vector2 direction;
 
-    public void Initialize(float dmg, Vector2 dir)
+    public void Initialize(float dmg, Vector2 dir, float speed, float lifetime)
     {
         damage = dmg;
         direction = dir.normalized;

@@ -41,6 +41,8 @@ public class GameControllerLaudosWizardsHouse : MonoBehaviour
     public GameObject FadePanel;
     public float fadeTime = 2f;
 
+    public int sceneCode = 4;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
