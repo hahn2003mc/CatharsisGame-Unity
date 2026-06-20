@@ -35,6 +35,7 @@ public class GameControllerLaudos : MonoBehaviour
 
     public GameObject Vienna;
     public ViennaController viennaController;
+    public GameObject pirateShip;
 
     public GameObject Biscus;
     public BiscusController biscusController;
@@ -51,9 +52,14 @@ public class GameControllerLaudos : MonoBehaviour
 
     public GameObject psychicPinkPanel;
 
-    public SaveManager saveManager;
+    private SaveManager saveManager;
 
     public int sceneCode = 4;
+
+    private void Awake()
+    {
+        saveManager = SaveManager.instance;
+    }
 
     public void canMove()
     {
@@ -61,50 +67,89 @@ public class GameControllerLaudos : MonoBehaviour
         wizardController.canMove = true;
     }
 
-    public void testSave() {
+    public void saveToDisk() {
         saveManager.Save();
     }
-
-    private void Awake()
-    {
-        Debug.Log("GameControllerLaudos Awake");
-    }
-    private void OnEnable()
-    {
-        Debug.Log("GameControllerLaudos Enabled");
-    }
-
-    private void OnDestroy()
-    {
-        Debug.Log("GameControllerLaudos Destroyed");
-    }
-
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        testSave();
+        Debug.Log(saveManager.spawnPointIndicator);
+        switch (saveManager.spawnPointIndicator)
+            {
+            case "Docks":
+                playerController.transform.position = new Vector3(22.5f, 83.8f, playerController.transform.position.z);
+                knightFormController.SetForm(KnightFormController.KnightForm.Armor);
+                knightFormController.LockForm(false);
+                playerController.canSwapCharacters = true;
+                knightController.canAttack = true;
+                knightSword.SetActive(true);
+                wizard.SetActive(false);
+                knight.SetActive(true);
+                KnightUI.SetActive(false);
+                WizardUI.SetActive(false);
+                Vienna.transform.position = new Vector3(19, 82.0f, wizardNPC.transform.position.z);
+                pirateShip.SetActive(true);
+                ManaBarUI.SetActive(true);
+                EnergyBarUI.SetActive(true);
+                Vienna.SetActive(true);
+                canMove();
+                dialogueController.StartDialogue(CatharinAndViennaDialogue3);
+                biscusInteractionCollider.SetActive(true);
+                psychicSpellAnimationObject.SetActive(false);
 
-        playerController.transform.position = new Vector3(22.5f, 83.8f, playerController.transform.position.z);
-        knightFormController.SetForm(KnightFormController.KnightForm.Armor);
-        knightFormController.LockForm(false);
-        playerController.canSwapCharacters = true;
-        knightController.canAttack = true;
-        knightSword.SetActive(true);
-        wizard.SetActive(false);
-        knight.SetActive(true);
-        KnightUI.SetActive(false);
-        WizardUI.SetActive(false);
-        wizardNPC.SetActive(false);
-        wizardNPC.transform.position = new Vector3(27.78f, 81.5f, wizardNPC.transform.position.z);
-        Vienna.transform.position = new Vector3(19, 82.0f, wizardNPC.transform.position.z);
-        ManaBarUI.SetActive(true);
-        EnergyBarUI.SetActive(true);
-        Vienna.SetActive(true);
-        canMove();
-        dialogueController.StartDialogue(CatharinAndViennaDialogue3);
-        biscusInteractionCollider.SetActive(true);
-        psychicSpellAnimationObject.SetActive(false);
+                saveManager.spawnPointIndicator = "Docks";
+                saveToDisk();
+                break;
+
+            case "WizardsHouse":
+                playerController.transform.position = new Vector3(56.1f, 145.0f, playerController.transform.position.z);
+                knightFormController.SetForm(KnightFormController.KnightForm.Girl);
+                knightFormController.LockForm(false);
+                playerController.canSwapCharacters = true;
+                knightController.canAttack = true;
+                knightSword.SetActive(false);
+                wizard.SetActive(false);
+                knight.SetActive(true);
+                KnightUI.SetActive(false);
+                WizardUI.SetActive(false);
+                wizardNPC.SetActive(false);
+                ManaBarUI.SetActive(true);
+                EnergyBarUI.SetActive(true);
+                Vienna.SetActive(false);
+                pirateShip.SetActive(false);
+                canMove();
+                biscusInteractionCollider.SetActive(false);
+
+                saveManager.spawnPointIndicator = "WizardsHouse";
+                saveToDisk();
+                break;
+
+            default:
+                playerController.transform.position = new Vector3(22.5f, 83.8f, playerController.transform.position.z);
+                knightFormController.SetForm(KnightFormController.KnightForm.Armor);
+                knightFormController.LockForm(false);
+                playerController.canSwapCharacters = true;
+                knightController.canAttack = true;
+                knightSword.SetActive(true);
+                wizard.SetActive(false);
+                knight.SetActive(true);
+                KnightUI.SetActive(false);
+                WizardUI.SetActive(false);
+                Vienna.transform.position = new Vector3(19, 82.0f, wizardNPC.transform.position.z);
+                pirateShip.SetActive(true);
+                ManaBarUI.SetActive(true);
+                EnergyBarUI.SetActive(true);
+                Vienna.SetActive(true);
+                canMove();
+                dialogueController.StartDialogue(CatharinAndViennaDialogue3);
+                biscusInteractionCollider.SetActive(true);
+                psychicSpellAnimationObject.SetActive(false);
+
+                saveManager.spawnPointIndicator = "Docks";
+                saveToDisk();
+                break;
+        }
     }
 
     // Update is called once per frame
@@ -149,6 +194,8 @@ public class GameControllerLaudos : MonoBehaviour
     }
 
     public void transferToWizardsHouseScene() {
+        saveManager.spawnPointIndicator = "WizardsHouse";
+        saveToDisk();
         StartCoroutine(waitForFadeToFinish());
     }
 
