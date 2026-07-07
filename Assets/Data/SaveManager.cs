@@ -7,6 +7,7 @@ public class SaveManager : MonoBehaviour
 
     int sceneCode = 0;
     public string spawnPointIndicator;
+    public bool enteredWizardsHouse;
 
     private string savepath;
 
@@ -42,12 +43,16 @@ public class SaveManager : MonoBehaviour
         SaveData data = new SaveData();
         sceneCode = ResolveSceneCodeFromCurrentScene();
         data.world = sceneCode;
+
+        data.spawnPointIndicator = spawnPointIndicator;
+        data.enteredWizardsHouse = enteredWizardsHouse;
         if (playerController != null)
         {
+            GameObject player = GameObject.Find("Player");
+            playerController = player.GetComponent<PlayerController>();
             data.x = playerController.transform.position.x;
             data.y = playerController.transform.position.y;
             data.z = playerController.transform.position.z;
-            data.spawnPointIndicator = spawnPointIndicator;
             data.normalDamage = playerController.GetComponentInChildren<KnightController>(true).swordDamage;
             data.heavyDamage = playerController.GetComponentInChildren<KnightController>(true).heavyAttackDamage;
             data.spellDamage = playerController.GetComponentInChildren<WizardController>(true).spellDamage;
@@ -73,13 +78,19 @@ public class SaveManager : MonoBehaviour
 
         SaveData data = JsonUtility.FromJson<SaveData>(json);
 
-        playerController.transform.position = new Vector3(data.x, data.y, data.z);
         spawnPointIndicator = data.spawnPointIndicator;
-        playerController.GetComponentInChildren<KnightController>().swordDamage = data.normalDamage;
-        playerController.GetComponentInChildren<KnightController>().heavyAttackDamage = data.heavyDamage;
-        playerController.GetComponentInChildren<WizardController>().spellDamage = data.spellDamage;
-        playerController.GetComponentInChildren<WizardController>().spellSpeed = data.spellSpeed;
-        playerController.GetComponentInChildren<WizardController>().spellLifetime = data.spellLifetime;
+        enteredWizardsHouse = data.enteredWizardsHouse;
+        if (playerController != null)
+        {
+            GameObject player = GameObject.Find("Player");
+            playerController = player.GetComponent<PlayerController>();
+            playerController.transform.position = new Vector3(data.x, data.y, data.z);
+            playerController.GetComponentInChildren<KnightController>(true).swordDamage = data.normalDamage;
+            playerController.GetComponentInChildren<KnightController>(true).heavyAttackDamage = data.heavyDamage;
+            playerController.GetComponentInChildren<WizardController>(true).spellDamage = data.spellDamage;
+            playerController.GetComponentInChildren<WizardController>(true).spellSpeed = data.spellSpeed;
+            playerController.GetComponentInChildren<WizardController>(true).spellLifetime = data.spellLifetime;
+        }
     }
 
     private int ResolveSceneCodeFromCurrentScene()

@@ -74,7 +74,10 @@ public class GameControllerLaudos : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        saveManager.Load();
         Debug.Log(saveManager.spawnPointIndicator);
+        Debug.Log(saveManager.enteredWizardsHouse);
+        Debug.Log("Local Save Path: " + Application.persistentDataPath);
         switch (saveManager.spawnPointIndicator)
             {
             case "Docks":
@@ -122,6 +125,7 @@ public class GameControllerLaudos : MonoBehaviour
                 biscusInteractionCollider.SetActive(false);
 
                 saveManager.spawnPointIndicator = "WizardsHouse";
+                saveManager.enteredWizardsHouse = true;
                 saveToDisk();
                 break;
 
@@ -193,10 +197,14 @@ public class GameControllerLaudos : MonoBehaviour
         }
     }
 
-    public void transferToWizardsHouseScene() {
-        saveManager.spawnPointIndicator = "WizardsHouse";
-        saveToDisk();
-        StartCoroutine(waitForFadeToFinish());
+    public void transferToWizardsHouseScene()
+    {
+        if (!saveManager.enteredWizardsHouse) { 
+            saveManager.spawnPointIndicator = "WizardsHouse";
+            saveManager.enteredWizardsHouse = true;
+            saveToDisk();
+            StartCoroutine(waitForFadeToFinish());
+        }
     }
 
     private IEnumerator waitForFadeToFinish() {

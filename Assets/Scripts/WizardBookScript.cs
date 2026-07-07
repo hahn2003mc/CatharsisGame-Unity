@@ -3,6 +3,7 @@ using UnityEngine;
 public class WizardBookScript : MonoBehaviour
 {
     public Transform target;
+    public SpriteRenderer sr;
 
     [Header("Follow Settings")]
     public float smoothTime = 0.2f;
@@ -22,6 +23,8 @@ public class WizardBookScript : MonoBehaviour
     void Update()
     {
         if (target == null) return;
+
+        sr.sortingOrder = Mathf.RoundToInt(-transform.position.y * 100);
 
         bool isMoving =
             Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0 ||

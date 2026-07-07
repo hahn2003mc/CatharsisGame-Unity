@@ -34,12 +34,26 @@ public class WizardsHouseController : MonoBehaviour
     public Animator knightAnimator;
     public Animator wizardAnimator;
 
+    private SaveManager saveManager;
+
+    private void Awake()
+    {
+        saveManager = SaveManager.instance;
+    }
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         interactionCount = 0;
-        canInteract = true;
+        Debug.Log("found that enteredWizardsHouse was " + saveManager.enteredWizardsHouse);
+        if (saveManager.enteredWizardsHouse == true) {
+            canInteract = false;
+        }
+        else 
+        { 
+            canInteract = true; 
+        }
     }
 
     // Update is called once per frame

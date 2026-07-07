@@ -7,6 +7,7 @@ public class SaveData
     public int world;
     public float x, y, z;
     public string spawnPointIndicator;
+    public bool enteredWizardsHouse;
     public float normalDamage;
     public float heavyDamage;
     public float spellDamage;
