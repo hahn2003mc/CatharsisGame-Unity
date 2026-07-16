@@ -46,6 +46,7 @@ public class DialogueController : MonoBehaviour
 
             // Force stop movement completely
             knightController.isWalking = false;
+            knightController.setCanAttack(false);
             wizardController.isWalking = false;
 
             // Reset animator parameters
@@ -124,6 +125,7 @@ public class DialogueController : MonoBehaviour
                     GameControllerGrassWorld.finishDialogueProcessing(g_dialogue);
                     g_dialogue = null;
                     currentIndex = 0;
+                    knightController.setCanAttack(true);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.Escape))
@@ -133,6 +135,7 @@ public class DialogueController : MonoBehaviour
                 GameControllerGrassWorld.canMove();
                 g_dialogue = null;
                 currentIndex = 0;
+                knightController.setCanAttack(true);
             }
         }
     
@@ -160,6 +163,7 @@ public class DialogueController : MonoBehaviour
                     GameControllerLaudos.finishDialogueProcessing(g_dialogue);
                     g_dialogue = null;
                     currentIndex = 0;
+                    knightController.setCanAttack(true);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.Escape))
@@ -169,6 +173,7 @@ public class DialogueController : MonoBehaviour
                 GameControllerLaudos.canMove();
                 g_dialogue = null;
                 currentIndex = 0;
+                knightController.setCanAttack(true);
             }
         }
 

@@ -202,7 +202,10 @@ public class GruntController : MonoBehaviour
 
     public void Death()
     {
-        gameController.ConfigureEnemyCountsToUpdateAPI(EnemyEnums.GRUNT);
+        if (gameController != null) 
+        {
+            gameController.ConfigureEnemyCountsToUpdateAPI(EnemyEnums.GRUNT);
+        }
         rb.linearVelocity = Vector2.zero;
         self.SetActive(false);
         Destroy(gameObject);

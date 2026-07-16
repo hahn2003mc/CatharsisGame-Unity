@@ -103,7 +103,7 @@ public class KnightController : MonoBehaviour
 
 
         // Flip across X axis when D is pressed
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKey(KeyCode.A))
         {
             Vector3 scale = transform.localScale;
             scale.x = -Mathf.Abs(scale.x); // Ensure positive
@@ -111,7 +111,7 @@ public class KnightController : MonoBehaviour
 
             playerController.lastDirection = Vector2.left;
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKey(KeyCode.D))
         {
             Vector3 scale = transform.localScale;
             scale.x = Mathf.Abs(scale.x); // Ensure negative
@@ -119,11 +119,11 @@ public class KnightController : MonoBehaviour
 
             playerController.lastDirection = Vector2.right;
         }
-        else if (Input.GetKeyDown(KeyCode.W))
+        else if (Input.GetKey(KeyCode.W))
         {
             playerController.lastDirection = Vector2.up;
         }
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKey(KeyCode.S))
         {
             playerController.lastDirection = Vector2.down;
         }
@@ -315,5 +315,10 @@ public class KnightController : MonoBehaviour
             rb = GetComponentInParent<Rigidbody2D>();
         }
         rb.linearVelocity = Vector2.zero;
+    }
+
+    public void setCanAttack(bool var) 
+    {
+        canAttack = var;
     }
 }
