@@ -28,6 +28,7 @@ public class GameControllerLaudos : MonoBehaviour
 
     public Dialogue CatharinAndViennaDialogue3;
     public Dialogue CatharinAndBiscusDialogue2;
+    public Dialogue CatharinAndKaelDialogue1;
 
     public GameObject mainCamera;
 
@@ -38,6 +39,7 @@ public class GameControllerLaudos : MonoBehaviour
     public GameObject pirateShip;
 
     public GameObject Biscus;
+    public GameObject Kael;
     public BiscusController biscusController;
 
     public GameObject areaCampFire;
@@ -84,8 +86,8 @@ public class GameControllerLaudos : MonoBehaviour
                 playerController.transform.position = new Vector3(22.5f, 83.8f, playerController.transform.position.z);
                 knightFormController.SetForm(KnightFormController.KnightForm.Armor);
                 knightFormController.LockForm(false);
-                playerController.canSwapCharacters = true;
-                knightController.canAttack = true;
+                playerController.setCanSwapCharactersTrue();
+                knightController.setCanAttack(true);
                 knightSword.SetActive(true);
                 wizard.SetActive(false);
                 knight.SetActive(true);
@@ -100,6 +102,7 @@ public class GameControllerLaudos : MonoBehaviour
                 dialogueController.StartDialogue(CatharinAndViennaDialogue3);
                 biscusInteractionCollider.SetActive(true);
                 psychicSpellAnimationObject.SetActive(false);
+                Kael.SetActive(false);
 
                 saveManager.spawnPointIndicator = "Docks";
                 saveToDisk();
@@ -109,21 +112,27 @@ public class GameControllerLaudos : MonoBehaviour
                 playerController.transform.position = new Vector3(56.1f, 145.0f, playerController.transform.position.z);
                 knightFormController.SetForm(KnightFormController.KnightForm.Girl);
                 knightFormController.LockForm(false);
-                playerController.canSwapCharacters = true;
-                knightController.canAttack = true;
+                playerController.setCanSwapCharactersFalse();
+                knightController.setCanAttack(false);
                 knightSword.SetActive(false);
                 wizard.SetActive(false);
                 knight.SetActive(true);
                 KnightUI.SetActive(false);
                 WizardUI.SetActive(false);
-                wizardNPC.SetActive(false);
-                ManaBarUI.SetActive(true);
+                wizardNPC.SetActive(true);
+                ManaBarUI.SetActive(false);
                 EnergyBarUI.SetActive(true);
                 Vienna.SetActive(false);
                 pirateShip.SetActive(false);
-                canMove();
+                knightController.canMove = false;
                 biscusInteractionCollider.SetActive(false);
-
+                wizardNPC.transform.position = new Vector3(56.8f, 144.8f, playerController.transform.position.z);
+                Kael.transform.position = new Vector3(55.1f, 145.5f, playerController.transform.position.z);
+                Kael.SetActive(true);
+                StartCoroutine(WaitAndChangeDirection(Vector2.down, 0f, 0f, -1f));
+                StartCoroutine(WaitAndChangeDirection(Vector2.left, 2f, -1f, 0f));
+                StartCoroutine(WaitAndStartDialogue(CatharinAndKaelDialogue1, 3f));
+                
                 saveManager.spawnPointIndicator = "WizardsHouse";
                 saveManager.enteredWizardsHouse = true;
                 saveToDisk();
@@ -133,8 +142,8 @@ public class GameControllerLaudos : MonoBehaviour
                 playerController.transform.position = new Vector3(22.5f, 83.8f, playerController.transform.position.z);
                 knightFormController.SetForm(KnightFormController.KnightForm.Armor);
                 knightFormController.LockForm(false);
-                playerController.canSwapCharacters = true;
-                knightController.canAttack = true;
+                playerController.setCanSwapCharactersTrue();
+                knightController.setCanAttack(true);
                 knightSword.SetActive(true);
                 wizard.SetActive(false);
                 knight.SetActive(true);
@@ -194,6 +203,11 @@ public class GameControllerLaudos : MonoBehaviour
             biscusController.updateInteractionCount(1);
             pauseMovement();
             applyBiscusEffects();
+        }
+        else if (dialogue.name == "CatharinAndKaelDialogue1") 
+        {
+            wizardNPC.SetActive(false);
+            Kael.transform.position = new Vector3(-52.1f, 95.7f, playerController.transform.position.z);
         }
     }
 
@@ -275,6 +289,28 @@ public class GameControllerLaudos : MonoBehaviour
     public IEnumerator WaitAndStartDialogue(Dialogue dialogue, float time) {
         yield return new WaitForSeconds(time);
         dialogueController.StartDialogue(dialogue);
+    }
+
+    public IEnumerator WaitAndChangeDirection(Vector2 direction, float time)
+    {
+        yield return new WaitForSeconds(time);
+        playerController.lastDirection = direction;
+        knightController.ApplyFacingDirection();
+        wizardController.ApplyFacingDirection();
+    }
+
+    public IEnumerator WaitAndChangeDirection(Vector2 direction, float time, float moveX, float moveY)
+    {
+        yield return new WaitForSeconds(time);
+        playerController.lastDirection = direction;
+        Animator knightAnimator = knightController.GetComponent<Animator>();
+        knightAnimator.SetFloat("moveX", moveX);
+        knightAnimator.SetFloat("moveY", moveY);
+        knightController.ApplyFacingDirection();
+        Animator wizardAnimator = wizardController.GetComponent<Animator>();
+        wizardAnimator.SetFloat("moveX", moveX);
+        wizardAnimator.SetFloat("moveY", moveY);
+        wizardController.ApplyFacingDirection();
     }
 
 

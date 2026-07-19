@@ -20,7 +20,7 @@ public class KnightFormController : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        SetForm(KnightForm.Armor);
+        // SetForm(KnightForm.Armor);
         ApplyForm();
     }
 

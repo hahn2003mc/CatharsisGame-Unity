@@ -61,7 +61,7 @@ public class GameController : MonoBehaviour
         wizardUI.SetActive(false);
         knightFormController.SetForm(KnightFormController.KnightForm.Armor);
         knightFormController.LockForm(true);
-        knightController.canAttack = true;
+        knightController.setCanAttack(true);
         knightController.canMove = true;
         wizardController.canMove = true;
         DeathScreen.SetActive(false);
@@ -72,7 +72,7 @@ public class GameController : MonoBehaviour
         skeletonGuard.SetActive(true);
         Portal.SetActive(false);
 
-        playerController.canSwapCharacters = true;
+        playerController.setCanSwapCharactersTrue();
     }
 
     // Update is called once per frame

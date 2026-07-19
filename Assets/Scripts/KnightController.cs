@@ -19,11 +19,13 @@ public class KnightController : MonoBehaviour
 
     public float swordDamage = 30f;
     public float heavyAttackDamage = 90f;
+    public float slashAttackDamage = 150f;
 
     public float maxEnergy = 100f;
 
     public float attackEnergyCost = 50f;
     public float heavyAttackEnergyCost = 100f;
+    public float slashAttackEnergyCost = 100f;
 
     public float energyRegenRate = 10f;
 
@@ -38,9 +40,10 @@ public class KnightController : MonoBehaviour
     public GameObject swordObject;
     public GameObject swordAttackCollider;
     public GameObject heavyAttackCollider;
+    public GameObject slashAttackCollider;
 
     public bool canMove;
-    public bool canAttack;
+    [SerializeField] private bool canAttack;
 
     public Light2D knightSwordLight;
 
@@ -175,16 +178,32 @@ public class KnightController : MonoBehaviour
                 Debug.Log("no energy!");
             }
         }
-        // on E pressed
-        if (Input.GetKeyDown(KeyCode.E))
+        // on Q pressed
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            //Debug.Log("E pressed on knight");
+            //Debug.Log("Q pressed on knight");
             if (currentEnergy >= heavyAttackEnergyCost)
             {
                 // start attacking animation
                 animator.SetTrigger("HeavyAttack");
                 // subtract mana
                 currentEnergy = currentEnergy - heavyAttackEnergyCost;
+            }
+            else
+            {
+                Debug.Log("no energy!");
+            }
+        }
+        // on E pressed in Girl Form
+        if (Input.GetKeyDown(KeyCode.E) && form.currentForm == KnightFormController.KnightForm.Girl)
+        {
+            //Debug.Log("E pressed on knight in girl form");
+            if (currentEnergy >= slashAttackEnergyCost)
+            {
+                // start attacking animation
+                animator.SetTrigger("SlashAttack");
+                // subtract mana
+                currentEnergy = currentEnergy - slashAttackEnergyCost;
             }
             else
             {
@@ -198,7 +217,7 @@ public class KnightController : MonoBehaviour
         ApplyFacingDirection();
     }
 
-    void ApplyFacingDirection()
+    public void ApplyFacingDirection()
     {
         if (playerController == null) { return; }
         Vector2 dir = playerController.lastDirection;
@@ -292,6 +311,17 @@ public class KnightController : MonoBehaviour
 
     }
 
+    public void EnableSlashAttackCollider()
+    {
+        slashAttackCollider.SetActive(true);
+    }
+
+    public void DisableSlashAttackCollider()
+    {
+        slashAttackCollider.SetActive(false);
+
+    }
+
     public void setCanMoveTrue()
     {
         canMove = true;
@@ -320,5 +350,15 @@ public class KnightController : MonoBehaviour
     public void setCanAttack(bool var) 
     {
         canAttack = var;
+    }
+
+    public void setCanSwapCharactersTrueInParent() 
+    {
+        playerController.setCanSwapCharactersTrue();
+    }
+
+    public void setCanSwapCharactersFalseInParent()
+    {
+        playerController.setCanSwapCharactersFalse();
     }
 }

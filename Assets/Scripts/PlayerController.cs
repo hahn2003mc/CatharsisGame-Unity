@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     private float damageCooldown = 0.5f;
     private float lastDamageTime = -999f;
 
-    public bool canSwapCharacters;
+    private bool canSwapCharacters;
 
     public float headOffset = 0.5f;
 
@@ -259,5 +259,15 @@ void HandleCharacter()
             }
             wizardDamageMask.SetActive(false);
         }
+    }
+
+    public void setCanSwapCharactersTrue() 
+    {
+        canSwapCharacters = true;
+    }
+
+    public void setCanSwapCharactersFalse()
+    {
+        canSwapCharacters = false;
     }
 }

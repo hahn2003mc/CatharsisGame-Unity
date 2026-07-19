@@ -61,8 +61,8 @@ public class GameControllerPirateShip : MonoBehaviour
         playerController.transform.position = new Vector3(21.9f, 79.8f, playerController.transform.position.z);
         knightFormController.SetForm(KnightFormController.KnightForm.Girl);
         knightFormController.LockForm(true);
-        playerController.canSwapCharacters = false;
-        knightController.canAttack = false;
+        playerController.setCanSwapCharactersFalse();
+        knightController.setCanAttack(false);
         knightSword.SetActive(false);
         wizard.SetActive(false);
         knight.SetActive(true);

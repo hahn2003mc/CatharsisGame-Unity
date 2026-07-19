@@ -86,8 +86,8 @@ public class GameControllerGrassWorld : MonoBehaviour
         playerController.transform.position = new Vector3(bed.transform.position.x, bed.transform.position.y - 1, playerController.transform.position.z);
         knightFormController.SetForm(KnightFormController.KnightForm.Girl);
         knightFormController.LockForm(true);
-        playerController.canSwapCharacters = false;
-        knightController.canAttack = false;
+        playerController.setCanSwapCharactersTrue();
+        knightController.setCanAttack(false);
         knightSword.SetActive(false);
         wizard.SetActive(false);
         knight.SetActive(true);
@@ -204,8 +204,13 @@ public class GameControllerGrassWorld : MonoBehaviour
     }
 
     public void finishDialogueProcessing(Dialogue dialogue) {
-        if (dialogue.name == "CatharinAndDadDialogue1")
+        if (dialogue.name == "CatharinMonologue1")
         {
+            knightController.setCanAttack(false);
+        }
+        else if (dialogue.name == "CatharinAndDadDialogue1")
+        {
+            knightController.setCanAttack(false);
             doorController.canLeave = true;
             CatharinsDad.SetActive(false);
             CatharinsDad.transform.position = new Vector3(36f, 55.5f, CatharinsDad.transform.position.z);
@@ -214,6 +219,7 @@ public class GameControllerGrassWorld : MonoBehaviour
         }
         else if (dialogue.name == "CatharinAndDadDialogue2")
         {
+            knightController.setCanAttack(false);
             CatharinsDad.SetActive(false);
             CatharinsDad.transform.position = new Vector3(54f, 52f, CatharinsDad.transform.position.z);
             CatharinsDad.SetActive(true);
@@ -223,7 +229,7 @@ public class GameControllerGrassWorld : MonoBehaviour
         {
             CatharinsDad.SetActive(false);
             dadController.updateInteractionCount(3);
-            knightController.canAttack = true;
+            knightController.setCanAttack(true);
             knightFormController.LockForm(false);
             StartSpiderSpawning();
             spawnBarrier.SetActive(false);
@@ -236,7 +242,7 @@ public class GameControllerGrassWorld : MonoBehaviour
         else if (dialogue.name == "CatharinAndWizardDialogue1")
         {
             wizardNPC.SetActive(false);
-            playerController.canSwapCharacters = true;
+            playerController.setCanSwapCharactersTrue();
             ManaBarUI.SetActive(true);
             spiderPrereq2Completed = true;
         }
@@ -253,7 +259,7 @@ public class GameControllerGrassWorld : MonoBehaviour
         spiderSpawning = false;
         fogTilemap.SetActive(false);
         Vienna.SetActive(true);
-        playerController.canSwapCharacters = false;
+        playerController.setCanSwapCharactersFalse();
         knight.SetActive(true);
         wizard.SetActive(false);
         wizardNPC.SetActive(true);

@@ -217,7 +217,7 @@ public class WizardController : MonoBehaviour
         ApplyFacingDirection();
     }
 
-    void ApplyFacingDirection()
+    public void ApplyFacingDirection()
     {
         if (playerController == null) { return; }
         Vector2 dir = playerController.lastDirection;

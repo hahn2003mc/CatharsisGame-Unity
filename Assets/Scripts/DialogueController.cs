@@ -122,10 +122,10 @@ public class DialogueController : MonoBehaviour
                     // End of dialogue
                     DialogueContainer.SetActive(false);
                     GameControllerGrassWorld.canMove();
-                    GameControllerGrassWorld.finishDialogueProcessing(g_dialogue);
-                    g_dialogue = null;
                     currentIndex = 0;
                     knightController.setCanAttack(true);
+                    GameControllerGrassWorld.finishDialogueProcessing(g_dialogue);
+                    g_dialogue = null;
                 }
             }
             else if (Input.GetKeyDown(KeyCode.Escape))
@@ -160,10 +160,10 @@ public class DialogueController : MonoBehaviour
                     // End of dialogue
                     DialogueContainer.SetActive(false);
                     GameControllerLaudos.canMove();
-                    GameControllerLaudos.finishDialogueProcessing(g_dialogue);
-                    g_dialogue = null;
                     currentIndex = 0;
                     knightController.setCanAttack(true);
+                    GameControllerLaudos.finishDialogueProcessing(g_dialogue);
+                    g_dialogue = null;
                 }
             }
             else if (Input.GetKeyDown(KeyCode.Escape))
