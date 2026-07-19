@@ -48,8 +48,6 @@ public class WizardController : MonoBehaviour
     public float spellLifetime;
 
 
-
-
     void Start()
     {
         playerController = GetComponentInParent<PlayerController>();
@@ -95,7 +93,7 @@ public class WizardController : MonoBehaviour
 
 
         // Flip across X axis when D is pressed
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(Bindings.WizardMoveLeft))
         {
             Vector3 scale = transform.localScale;
             scale.x = -Mathf.Abs(scale.x); // Ensure positive
@@ -103,7 +101,7 @@ public class WizardController : MonoBehaviour
 
             playerController.lastDirection = Vector2.left;
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(Bindings.WizardMoveRight))
         {
             Vector3 scale = transform.localScale;
             scale.x = Mathf.Abs(scale.x); // Ensure negative
@@ -111,12 +109,12 @@ public class WizardController : MonoBehaviour
 
             playerController.lastDirection = Vector2.right;
         }
-        else if (Input.GetKeyDown(KeyCode.W))
+        else if (Input.GetKeyDown(Bindings.WizardMoveUp))
         {
 
             playerController.lastDirection = Vector2.up;
         }
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKeyDown(Bindings.WizardMoveDown))
         {
 
             playerController.lastDirection = Vector2.down;
@@ -143,7 +141,7 @@ public class WizardController : MonoBehaviour
     void HandleAttack()
     {
         // on mouse pressed
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(Bindings.WizardLightAttack))
         {
             // if enough mana, cast spell
             if (currentMana >= spellManaCost)
@@ -171,7 +169,7 @@ public class WizardController : MonoBehaviour
             }
         }
         // on E pressed
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(Bindings.WizardHeal))
         {
             if (currentMana >= healManaCost)
             {

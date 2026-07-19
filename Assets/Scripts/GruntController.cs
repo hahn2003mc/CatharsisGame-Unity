@@ -50,10 +50,17 @@ public class GruntController : MonoBehaviour
     public float despawnDistance = 35f;
 
     public GameController gameController;
+    public GameControllerGrassWorld gameControllerGrassWorld;
+
+    [SerializeField] private string enemyEnum;
+    public string EnemyEnum => enemyEnum;
 
     void Start()
     {
+        // find which gamecontroller to use - TODO FIX THIS
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        gameControllerGrassWorld = GameObject.Find("GameController").GetComponent<GameControllerGrassWorld>();
+
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         self.SetActive(true);
@@ -204,7 +211,11 @@ public class GruntController : MonoBehaviour
     {
         if (gameController != null) 
         {
-            gameController.ConfigureEnemyCountsToUpdateAPI(EnemyEnums.GRUNT);
+            gameController.ConfigureEnemyCountsToUpdateAPI(enemyEnum);
+        }
+        else if (gameControllerGrassWorld != null)
+        {
+            gameControllerGrassWorld.ConfigureEnemyCountsToUpdateAPI(enemyEnum);
         }
         rb.linearVelocity = Vector2.zero;
         self.SetActive(false);

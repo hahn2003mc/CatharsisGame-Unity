@@ -46,6 +46,9 @@ public class DragonController : MonoBehaviour
 
     public GameController gameController;
 
+    [SerializeField] private string enemyEnum;
+    public string EnemyEnum => enemyEnum;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -176,6 +179,7 @@ public class DragonController : MonoBehaviour
         // Debug.Log("Dragon died");
         gameController.StartSkeletonSpawning(); // stop skeleton spawning when dragon dies
         //animator.SetTrigger("Death");
+        gameController.ConfigureEnemyCountsToUpdateAPI(enemyEnum);
         self.SetActive(false);
     }
 

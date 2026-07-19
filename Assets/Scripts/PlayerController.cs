@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     private float damageCooldown = 0.5f;
     private float lastDamageTime = -999f;
 
-    private bool canSwapCharacters;
+    [SerializeField] private bool canSwapCharacters;
 
     public float headOffset = 0.5f;
 
@@ -84,7 +84,7 @@ void HandleCharacter()
         {
             return;
         }
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(Bindings.SwapCharacter))
         {
             player = !player;
 
@@ -208,7 +208,7 @@ void HandleCharacter()
     void HandleDamage(float incomingDamage)
     {
         health -= incomingDamage;
-        Debug.Log("Player took " + incomingDamage + " damage. Current health: " + health);
+        // Debug.Log("Player took " + incomingDamage + " damage. Current health: " + health);
 
         if (health <= 0)
         {

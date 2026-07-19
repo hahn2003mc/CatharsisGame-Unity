@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class GameControllerGrassWorld : MonoBehaviour
@@ -10,6 +11,10 @@ public class GameControllerGrassWorld : MonoBehaviour
     public WizardController wizardController;
     public GameObject wizard;
     public KnightFormController knightFormController;
+
+    public UserDataManager userDataManager;
+    private string username;
+    private string baseUrl = "";
 
     public DoorController doorController;
 
@@ -83,10 +88,13 @@ public class GameControllerGrassWorld : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        username = userDataManager.username;
+        StartCoroutine(PostToAPI(username, APIEndpoints.createNewAccountTemplate, "createNewAccount"));
+
         playerController.transform.position = new Vector3(bed.transform.position.x, bed.transform.position.y - 1, playerController.transform.position.z);
         knightFormController.SetForm(KnightFormController.KnightForm.Girl);
         knightFormController.LockForm(true);
-        playerController.setCanSwapCharactersTrue();
+        playerController.setCanSwapCharactersFalse();
         knightController.setCanAttack(false);
         knightSword.SetActive(false);
         wizard.SetActive(false);
@@ -154,6 +162,58 @@ public class GameControllerGrassWorld : MonoBehaviour
         playerController.invincible = false;
         DeathScreen.SetActive(false);
 
+    }
+
+    public void ConfigureEnemyCountsToUpdateAPI(string enemyName)
+    {
+        string jsonBody = APIEndpoints.updateEnemiesCountsTemplate;
+        jsonBody = jsonBody.Replace("INPUT_ENEMY_NAME", enemyName);
+        StartCoroutine(PostToAPI(username, jsonBody, "updateEnemiesCounts"));
+    }
+
+    private IEnumerator PostToAPI(string username, string jsonBody, string operation)
+    {
+        jsonBody = jsonBody.Replace("INPUT_USERNAME", username);
+        Debug.Log("Posting json message: " + jsonBody + " to API...");
+        byte[] rawBody = System.Text.Encoding.UTF8.GetBytes(jsonBody);
+
+        UnityWebRequest request = null;
+        if (operation == "createNewAccount")
+        {
+            request = new UnityWebRequest(
+                APIEndpoints.createNewAccount,
+                "POST"
+            );
+        }
+        else if (operation == "updateEnemiesCounts")
+        {
+            request = new UnityWebRequest(
+                APIEndpoints.updateEnemiesCounts,
+                "POST"
+            );
+        }
+        if (request == null)
+        {
+            Debug.Log("invalid API operation");
+            yield break;
+        }
+        request.uploadHandler = new UploadHandlerRaw(rawBody);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader(
+            "Content-Type",
+            "application/json"
+        );
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log(request.downloadHandler.text);
+        }
+        else
+        {
+            Debug.LogError(request.error);
+        }
     }
 
     public void StartSpiderSpawning()
@@ -234,6 +294,10 @@ public class GameControllerGrassWorld : MonoBehaviour
             StartSpiderSpawning();
             spawnBarrier.SetActive(false);
             EnergyBarUI.SetActive(true);
+            knightController.setCanAttack(true);
+            playerController.setCanSwapCharactersFalse();
+            playerController.setCanSwapCharactersFalse();
+            playerController.setCanSwapCharactersFalse();
         }
         else if (dialogue.name == "CatharinAndSednaDialogue1") 
         {

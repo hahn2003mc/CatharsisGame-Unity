@@ -49,8 +49,6 @@ public class KnightController : MonoBehaviour
 
     public bool lockCameraToPlayer = true;
 
-
-
     void Start()
     {
         playerController = GetComponentInParent<PlayerController>();
@@ -106,7 +104,7 @@ public class KnightController : MonoBehaviour
 
 
         // Flip across X axis when D is pressed
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(Bindings.KnightMoveLeft))
         {
             Vector3 scale = transform.localScale;
             scale.x = -Mathf.Abs(scale.x); // Ensure positive
@@ -114,7 +112,7 @@ public class KnightController : MonoBehaviour
 
             playerController.lastDirection = Vector2.left;
         }
-        else if (Input.GetKey(KeyCode.D))
+        else if (Input.GetKey(Bindings.KnightMoveRight))
         {
             Vector3 scale = transform.localScale;
             scale.x = Mathf.Abs(scale.x); // Ensure negative
@@ -122,11 +120,11 @@ public class KnightController : MonoBehaviour
 
             playerController.lastDirection = Vector2.right;
         }
-        else if (Input.GetKey(KeyCode.W))
+        else if (Input.GetKey(Bindings.KnightMoveUp))
         {
             playerController.lastDirection = Vector2.up;
         }
-        else if (Input.GetKey(KeyCode.S))
+        else if (Input.GetKey(Bindings.KnightMoveDown))
         {
             playerController.lastDirection = Vector2.down;
         }
@@ -150,19 +148,30 @@ public class KnightController : MonoBehaviour
 
     void HandleSwap()
     {
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(Bindings.KnightSwapForm))
         {
             if (form.currentForm == KnightFormController.KnightForm.Armor)
                 form.SetForm(KnightFormController.KnightForm.Girl);
             else
                 form.SetForm(KnightFormController.KnightForm.Armor);
         }
+        if (Input.GetKeyDown(Bindings.KnightSwapSword))
+        {
+            if (swordObject.activeSelf)
+            {
+                swordObject.SetActive(false);
+            }
+            else
+            {
+                swordObject.SetActive(true);
+            }
+        }
     }
 
     void HandleAttack()
     {
         // on mouse pressed
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(Bindings.KnightLightAttack))
         {
             //Debug.Log("left mouse clicked on knight");
             if (currentEnergy >= attackEnergyCost)
@@ -179,7 +188,7 @@ public class KnightController : MonoBehaviour
             }
         }
         // on Q pressed
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(Bindings.KnightHeavyAttack))
         {
             //Debug.Log("Q pressed on knight");
             if (currentEnergy >= heavyAttackEnergyCost)
@@ -195,7 +204,7 @@ public class KnightController : MonoBehaviour
             }
         }
         // on E pressed in Girl Form
-        if (Input.GetKeyDown(KeyCode.E) && form.currentForm == KnightFormController.KnightForm.Girl)
+        if (Input.GetKeyDown(Bindings.KnightSlashAttack) && form.currentForm == KnightFormController.KnightForm.Girl)
         {
             //Debug.Log("E pressed on knight in girl form");
             if (currentEnergy >= slashAttackEnergyCost)
@@ -350,6 +359,16 @@ public class KnightController : MonoBehaviour
     public void setCanAttack(bool var) 
     {
         canAttack = var;
+    }
+
+    public void setCanAttackTrue() 
+    {
+        canAttack = true;
+    }
+
+    public void setCanAttackFalse()
+    {
+        canAttack = false;
     }
 
     public void setCanSwapCharactersTrueInParent() 

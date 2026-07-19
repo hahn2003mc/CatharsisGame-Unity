@@ -54,7 +54,7 @@ public class GameController : MonoBehaviour
         username = userDataManager.username;
         StartCoroutine(PostToAPI(username, APIEndpoints.createNewAccountTemplate, "createNewAccount"));
 
-        Debug.Log("username: " + username + ", baseUrl: " + baseUrl);
+        // Debug.Log("username: " + username + ", baseUrl: " + baseUrl);
         knight.SetActive(true);
         wizard.SetActive(false);
         knightUI.SetActive(true);

@@ -23,7 +23,7 @@ public class CampfireController : MonoBehaviour
 
         if (Vector2.Distance(player.transform.position, self.transform.position) < interactionDistance && (playerController.health < 100))
         {
-            Debug.Log("within campfire range and not max health");
+            // Debug.Log("within campfire range and not max health");
             playerController.health += healingAmount * Time.deltaTime;
         }
         
