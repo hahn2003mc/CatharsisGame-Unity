@@ -3,7 +3,7 @@ using UnityEngine;
 public static class APIEndpoints
 {
     public const string baseUrl =
-        "http://localhost:8080/api";
+        "https://catharsisgame-api-production.up.railway.app/api";
 
     public const string createNewAccount =
         baseUrl + "/newAcc";
