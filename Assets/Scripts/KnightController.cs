@@ -223,6 +223,7 @@ public class KnightController : MonoBehaviour
 
     void OnEnable()
     {
+        canMove = true;
         ApplyFacingDirection();
     }
 

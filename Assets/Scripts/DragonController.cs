@@ -41,7 +41,7 @@ public class DragonController : MonoBehaviour
 
     public GameObject gruntPrefab;
 
-    private bool isGracePeriod = true;
+    public bool isGracePeriod = true;
     public float gracePeriodHealthThreshold = 0.6f; // 60% health
 
     public GameController gameController;

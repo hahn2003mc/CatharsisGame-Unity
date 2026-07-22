@@ -203,6 +203,14 @@ public class GameControllerGrassWorld : MonoBehaviour
             "Content-Type",
             "application/json"
         );
+        request.SetRequestHeader(
+            "X-Client-ID",
+            AUTH.CLIENT_ID
+        );
+        request.SetRequestHeader(
+            "X-Client-Secret",
+            AUTH.CLIENT_SECRET
+        );
 
         yield return request.SendWebRequest();
 

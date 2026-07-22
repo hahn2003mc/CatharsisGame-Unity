@@ -115,6 +115,14 @@ public class GameController : MonoBehaviour
             "Content-Type",
             "application/json"
         );
+        request.SetRequestHeader(
+            "X-Client-ID",
+            AUTH.CLIENT_ID
+        );
+        request.SetRequestHeader(
+            "X-Client-Secret",
+            AUTH.CLIENT_SECRET
+        );
 
         yield return request.SendWebRequest();
 
@@ -203,7 +211,9 @@ public class GameController : MonoBehaviour
             playerController.transform.position = areaCampFire.transform.position;
             dragonController.health = dragonController.maxHealth;
             dragonController.gameObject.SetActive(true);
+            dragonController.isGracePeriod = true;
         }
+
         playerController.health = playerController.maxHealth;
         playerController.invincible = true;
 

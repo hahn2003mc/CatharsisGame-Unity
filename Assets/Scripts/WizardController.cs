@@ -212,6 +212,7 @@ public class WizardController : MonoBehaviour
 
     void OnEnable()
     {
+        canMove = true;
         ApplyFacingDirection();
     }
 
