@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using static UnityEngine.RuleTile.TilingRuleOutput;
@@ -12,7 +13,7 @@ public class PlayerController : MonoBehaviour
 
     private SpriteRenderer sr;
 
-    public float maxHealth = 100f;
+    public float maxHealth;
     public float health;
 
     public GameObject knight;
@@ -43,6 +44,8 @@ public class PlayerController : MonoBehaviour
 
     public float headOffset = 0.5f;
 
+    public GameControllerGrassWorld gameControllerGrassWorld;
+    public GameControllerLaudos gameControllerLaudos;
 
     void Start()
     {
@@ -54,9 +57,18 @@ public class PlayerController : MonoBehaviour
         knightDamageMask.SetActive(false);
         wizardDamageMask.SetActive(false);
 
-        health = maxHealth;
+        health = PlayerValues.PlayerMaxHealth;
+
         invincible = false;
         //canSwapCharacters = true;
+
+        GameObject temp = GameObject.Find("GameController");
+
+        if (temp != null)
+        {
+            gameControllerGrassWorld = temp.GetComponent<GameControllerGrassWorld>();
+            gameControllerLaudos = temp.GetComponent<GameControllerLaudos>();
+        }
     }
 
 
@@ -66,19 +78,8 @@ public class PlayerController : MonoBehaviour
 
         RegenerateAbilities();
     }
-    void LateUpdate()
-    {
-       
-    }
 
-    void SortZByY()
-    {
-        // Sort the player based on their Y position (lower Y = higher Z)
-        float zPosition = -transform.position.y;
-    transform.position = new Vector3(transform.position.x, transform.position.y, zPosition);
-}
-
-void HandleCharacter()
+    void HandleCharacter()
     {
         if (!canSwapCharacters)
         {
@@ -263,11 +264,39 @@ void HandleCharacter()
 
     public void setCanSwapCharactersTrue() 
     {
-        canSwapCharacters = true;
+        // TODO: Refactor this to be included in the disk storage
+        if (gameControllerGrassWorld == null && gameControllerLaudos == null)
+        {
+            canSwapCharacters = true;
+        }
+        else
+        {
+            if (gameControllerLaudos == null && gameControllerGrassWorld != null)
+            {
+                // only allow the swapping of characters after finishing animation if the first wizard dialogue is completed
+                if (gameControllerGrassWorld.wizardInteracted)
+                {
+                    canSwapCharacters = true;
+                }
+                return;
+            }
+            else if (gameControllerGrassWorld == null && gameControllerLaudos != null) 
+            {
+                if (!gameControllerLaudos.wizardSceneCompleted)
+                {
+                    canSwapCharacters = true;
+                }
+            }
+        }
     }
 
     public void setCanSwapCharactersFalse()
     {
         canSwapCharacters = false;
+    }
+
+    public void setInvincible(bool value) 
+    {
+        invincible = value;
     }
 }

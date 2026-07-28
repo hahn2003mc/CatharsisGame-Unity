@@ -17,6 +17,7 @@ public static class Bindings
     public static KeyCode KnightMoveRight = KeyCode.D;
     public static KeyCode KnightSwapSword = KeyCode.L;
     public static KeyCode KnightSwapForm = KeyCode.H;
+    public static int KnightParry = 1;
     public static KeyCode SwapCharacter = KeyCode.LeftShift;
 
 }

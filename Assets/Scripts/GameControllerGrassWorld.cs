@@ -84,6 +84,8 @@ public class GameControllerGrassWorld : MonoBehaviour
 
     public int sceneCode = 2;
 
+    public bool wizardInteracted;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -120,6 +122,7 @@ public class GameControllerGrassWorld : MonoBehaviour
         Sedna.SetActive(true);
         Vienna.SetActive(false);
         isSpiderDefeated = false;
+        wizardInteracted = false;
     }
 
     // Update is called once per frame
@@ -314,6 +317,7 @@ public class GameControllerGrassWorld : MonoBehaviour
         else if (dialogue.name == "CatharinAndWizardDialogue1")
         {
             wizardNPC.SetActive(false);
+            wizardInteracted = true;
             playerController.setCanSwapCharactersTrue();
             ManaBarUI.SetActive(true);
             spiderPrereq2Completed = true;

@@ -15,13 +15,13 @@ public class WizardController : MonoBehaviour
 
     public Camera mainCamera;
 
-    public float maxMana = 100f;
+    public float maxMana;
 
-    public float spellManaCost = 20f;
+    public float spellManaCost;
 
-    public float healManaCost = 100f;
+    public float healManaCost;
 
-    public float manaRegenRate = 15f;
+    public float manaRegenRate;
 
     public float currentMana;
 
@@ -37,7 +37,7 @@ public class WizardController : MonoBehaviour
 
     public GameObject healAnimationObject;
     
-    public float healingAmount = 50f;
+    public float healingAmount;
 
     public GameObject healingMarker;
 
@@ -60,6 +60,15 @@ public class WizardController : MonoBehaviour
 
         healAnimationObject.SetActive(false);
         healingMarker.SetActive(false);
+
+        maxMana = PlayerValues.WizardMaxMana;
+        spellManaCost = PlayerValues.WizardLightAttackManaCost;
+        healManaCost = PlayerValues.WizardHealManaCost;
+        manaRegenRate = PlayerValues.WizardManaRegenRate;
+        healingAmount = PlayerValues.WizardHealHealingAmount;
+        spellDamage = PlayerValues.WizardLightAttackDamage;
+        spellSpeed = PlayerValues.WizardLightAttackSpeed;
+        spellLifetime = PlayerValues.KnightLightAttackLifetime;
 
         // canMove = true;
     }

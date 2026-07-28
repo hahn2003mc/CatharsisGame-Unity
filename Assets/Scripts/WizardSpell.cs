@@ -11,10 +11,13 @@ public class WizardSpell : MonoBehaviour
 
     private Vector2 direction;
 
-    public void Initialize(float dmg, Vector2 dir, float speed, float lifetime)
+    public void Initialize(float dmg, Vector2 dir, float spd, float lftm)
     {
         damage = dmg;
         direction = dir.normalized;
+        speed = spd;
+        lifetime = lftm;
+        
 
         RotateToDirection();
     }

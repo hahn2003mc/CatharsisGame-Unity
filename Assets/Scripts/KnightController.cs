@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using static KnightFormController;
 
@@ -17,17 +18,17 @@ public class KnightController : MonoBehaviour
 
     public Camera mainCamera;
 
-    public float swordDamage = 30f;
-    public float heavyAttackDamage = 90f;
-    public float slashAttackDamage = 150f;
+    public float swordDamage;
+    public float heavyAttackDamage;
+    public float slashAttackDamage;
 
-    public float maxEnergy = 100f;
+    public float maxEnergy;
 
-    public float attackEnergyCost = 50f;
-    public float heavyAttackEnergyCost = 100f;
-    public float slashAttackEnergyCost = 100f;
+    public float attackEnergyCost;
+    public float heavyAttackEnergyCost;
+    public float slashAttackEnergyCost;
 
-    public float energyRegenRate = 10f;
+    public float energyRegenRate;
 
     public float currentEnergy;
 
@@ -49,6 +50,12 @@ public class KnightController : MonoBehaviour
 
     public bool lockCameraToPlayer = true;
 
+    public GameObject knightShield;
+    public float parryCost;
+    [SerializeField] bool canParry;
+    [SerializeField] bool parrying;
+
+
     void Start()
     {
         playerController = GetComponentInParent<PlayerController>();
@@ -66,6 +73,21 @@ public class KnightController : MonoBehaviour
 
         // canMove = true;
         playerController.invincible = false;
+
+        knightShield.SetActive(false);
+
+        parrying = false;
+        canParry = true;
+
+        swordDamage = PlayerValues.KnightLightAttackDamage;
+        heavyAttackDamage = PlayerValues.KnightHeavyAttackDamage;
+        slashAttackDamage = PlayerValues.KnightSlashAttackDamage;
+        maxEnergy = PlayerValues.KnightMaxEnergy;
+        attackEnergyCost = PlayerValues.KnightLightAttackEnergyCost;
+        heavyAttackEnergyCost = PlayerValues.KnightHeavyAttackEnergyCost;
+        slashAttackEnergyCost = PlayerValues.KnightSlashAttackEnergyCost;
+        energyRegenRate = PlayerValues.KnightEnergyRegenRate;
+        parryCost = PlayerValues.KnightParryCost;
     }
 
     // Update is called once per frame
@@ -87,11 +109,20 @@ public class KnightController : MonoBehaviour
             HandleAttack();
         }
 
-        RegenerateEnergy();
+        // RegenerateEnergy();
 
         EnergyDisplay();
 
         HandleSwap();
+
+        CheckParryCooldown();
+    }
+
+    void CheckParryCooldown() {
+        if (currentEnergy == 100) 
+        {
+            canParry = true;
+        }
     }
 
     void HandleMovement()
@@ -159,11 +190,11 @@ public class KnightController : MonoBehaviour
         {
             if (swordObject.activeSelf)
             {
-                swordObject.SetActive(false);
+                DisableSword();
             }
             else
             {
-                swordObject.SetActive(true);
+                EnableSword();
             }
         }
     }
@@ -171,7 +202,7 @@ public class KnightController : MonoBehaviour
     void HandleAttack()
     {
         // on mouse pressed
-        if (Input.GetMouseButtonDown(Bindings.KnightLightAttack))
+        if (Input.GetMouseButtonDown(Bindings.KnightLightAttack) && !parrying)
         {
             //Debug.Log("left mouse clicked on knight");
             if (currentEnergy >= attackEnergyCost)
@@ -188,7 +219,7 @@ public class KnightController : MonoBehaviour
             }
         }
         // on Q pressed
-        if (Input.GetKeyDown(Bindings.KnightHeavyAttack))
+        if (Input.GetKeyDown(Bindings.KnightHeavyAttack) && !parrying)
         {
             //Debug.Log("Q pressed on knight");
             if (currentEnergy >= heavyAttackEnergyCost)
@@ -204,7 +235,7 @@ public class KnightController : MonoBehaviour
             }
         }
         // on E pressed in Girl Form
-        if (Input.GetKeyDown(Bindings.KnightSlashAttack) && form.currentForm == KnightFormController.KnightForm.Girl)
+        if (Input.GetKeyDown(Bindings.KnightSlashAttack) && form.currentForm == KnightFormController.KnightForm.Girl && !parrying)
         {
             //Debug.Log("E pressed on knight in girl form");
             if (currentEnergy >= slashAttackEnergyCost)
@@ -217,6 +248,46 @@ public class KnightController : MonoBehaviour
             else
             {
                 Debug.Log("no energy!");
+            }
+        }
+        // on mouse pressed
+        if (Input.GetMouseButton(Bindings.KnightParry) && (currentEnergy >= 0) && canParry)
+        {
+            //Debug.Log("right mouse clicked on knight");
+            parrying = true;
+
+            // set shield active
+            knightShield.SetActive(true);
+
+            setCanMoveFalse();
+
+            animator.SetBool("isWalking", false);
+
+            DisableSword();
+
+            playerController.setInvincible(true);
+
+            // subtract mana
+            currentEnergy = currentEnergy - parryCost * Time.deltaTime;
+
+            currentEnergy = Mathf.Max(currentEnergy, 0);
+
+            if (currentEnergy == 0) 
+            {
+                knightShield.SetActive(false);
+                playerController.setInvincible(false);
+                canMove = true;
+                canParry = false;
+                parrying = false;
+            }
+        }
+        if (Input.GetMouseButtonUp(Bindings.KnightParry)) 
+        {
+            {
+                knightShield.SetActive(false);
+                playerController.setInvincible(false);
+                canMove = true;
+                parrying = false;
             }
         }
     }

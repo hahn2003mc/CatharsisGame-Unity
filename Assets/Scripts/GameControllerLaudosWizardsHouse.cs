@@ -43,6 +43,18 @@ public class GameControllerLaudosWizardsHouse : MonoBehaviour
 
     public int sceneCode = 4;
 
+    private SaveManager saveManager;
+
+    private void Awake()
+    {
+        saveManager = SaveManager.instance;
+    }
+
+    public void saveToDisk()
+    {
+        saveManager.Save();
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -265,8 +277,10 @@ public class GameControllerLaudosWizardsHouse : MonoBehaviour
 
     private IEnumerator waitForFadeToFinish()
     {
-        yield return StartCoroutine(FadeToBlack());
-        SceneManager.LoadScene("Laudos4");
+        yield return StartCoroutine(FadeToBlackAndTransitionScene());
+        saveManager.spawnPointIndicator = "WizardsHouse";
+        saveManager.enteredWizardsHouse = true;
+        saveToDisk();
     }
 
     public void finishScene()
@@ -281,7 +295,7 @@ public class GameControllerLaudosWizardsHouse : MonoBehaviour
     }
 
 
-    public IEnumerator FadeToBlack()
+    public IEnumerator FadeToBlackAndTransitionScene()
     {
         Image img = FadePanel.GetComponent<Image>();
 
@@ -311,6 +325,8 @@ public class GameControllerLaudosWizardsHouse : MonoBehaviour
 
         // Ensure final values are exact
         img.color = new Color(startColor.r, startColor.g, startColor.b, 1f);
+
+        SceneManager.LoadScene("Laudos4");
     }
 
 }

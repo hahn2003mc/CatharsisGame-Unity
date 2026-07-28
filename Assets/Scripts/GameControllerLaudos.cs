@@ -58,6 +58,8 @@ public class GameControllerLaudos : MonoBehaviour
 
     public int sceneCode = 4;
 
+    public bool wizardSceneCompleted;
+
     private void Awake()
     {
         saveManager = SaveManager.instance;
@@ -103,6 +105,7 @@ public class GameControllerLaudos : MonoBehaviour
                 biscusInteractionCollider.SetActive(true);
                 psychicSpellAnimationObject.SetActive(false);
                 Kael.SetActive(false);
+                wizardSceneCompleted = false;
 
                 saveManager.spawnPointIndicator = "Docks";
                 saveToDisk();
@@ -132,6 +135,7 @@ public class GameControllerLaudos : MonoBehaviour
                 StartCoroutine(WaitAndChangeDirection(Vector2.down, 0f, 0f, -1f));
                 StartCoroutine(WaitAndChangeDirection(Vector2.left, 2f, -1f, 0f));
                 StartCoroutine(WaitAndStartDialogue(CatharinAndKaelDialogue1, 3f));
+                wizardSceneCompleted = true;
                 
                 saveManager.spawnPointIndicator = "WizardsHouse";
                 saveManager.enteredWizardsHouse = true;
@@ -158,6 +162,7 @@ public class GameControllerLaudos : MonoBehaviour
                 dialogueController.StartDialogue(CatharinAndViennaDialogue3);
                 biscusInteractionCollider.SetActive(true);
                 psychicSpellAnimationObject.SetActive(false);
+                wizardSceneCompleted = false;
 
                 saveManager.spawnPointIndicator = "Docks";
                 saveToDisk();
@@ -214,16 +219,13 @@ public class GameControllerLaudos : MonoBehaviour
     public void transferToWizardsHouseScene()
     {
         if (!saveManager.enteredWizardsHouse) { 
-            saveManager.spawnPointIndicator = "WizardsHouse";
-            saveManager.enteredWizardsHouse = true;
             saveToDisk();
             StartCoroutine(waitForFadeToFinish());
         }
     }
 
     private IEnumerator waitForFadeToFinish() {
-        yield return StartCoroutine(FadeToBlack());
-        SceneManager.LoadScene("Laudos4_WizardsHouse");
+        yield return StartCoroutine(FadeToBlackAndTransitionScene());
     }
 
     public void finishScene()
@@ -314,7 +316,7 @@ public class GameControllerLaudos : MonoBehaviour
     }
 
 
-    public IEnumerator FadeToBlack()
+    public IEnumerator FadeToBlackAndTransitionScene()
     {
         Image img = FadePanel.GetComponent<Image>();
 
@@ -346,6 +348,9 @@ public class GameControllerLaudos : MonoBehaviour
 
         // Ensure final values are exact
         img.color = new Color(startColor.r, startColor.g, startColor.b, 1f);
+
+        // start new scene after fade
+        SceneManager.LoadScene("Laudos4_WizardsHouse");
     }
 
 
