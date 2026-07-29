@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -55,6 +56,13 @@ public class KnightController : MonoBehaviour
     [SerializeField] bool canParry;
     [SerializeField] bool parrying;
 
+    public GameObject knightAOE;
+    public float knightAOECost;
+    public float knightAOEMultiplier;
+    public float damageMultiplier;
+    public Animator knightAOEAnimator;
+    public bool canSummonAOE;
+
 
     void Start()
     {
@@ -78,6 +86,7 @@ public class KnightController : MonoBehaviour
 
         parrying = false;
         canParry = true;
+        damageMultiplier = 1f;
 
         swordDamage = PlayerValues.KnightLightAttackDamage;
         heavyAttackDamage = PlayerValues.KnightHeavyAttackDamage;
@@ -88,6 +97,10 @@ public class KnightController : MonoBehaviour
         slashAttackEnergyCost = PlayerValues.KnightSlashAttackEnergyCost;
         energyRegenRate = PlayerValues.KnightEnergyRegenRate;
         parryCost = PlayerValues.KnightParryCost;
+        knightAOECost = PlayerValues.KnightAOECost;
+        knightAOEMultiplier = PlayerValues.KnightAOEMultiplier;
+        knightAOEAnimator = knightAOE.GetComponent<Animator>();
+        knightAOE.SetActive(false);
     }
 
     // Update is called once per frame
@@ -244,6 +257,25 @@ public class KnightController : MonoBehaviour
                 animator.SetTrigger("SlashAttack");
                 // subtract mana
                 currentEnergy = currentEnergy - slashAttackEnergyCost;
+            }
+            else
+            {
+                Debug.Log("no energy!");
+            }
+        }
+        if (Input.GetKeyDown(Bindings.KnightAOE) && form.currentForm == KnightFormController.KnightForm.Armor && !parrying && canSummonAOE)
+        {
+            //Debug.Log("E pressed on knight in girl form");
+            if (currentEnergy >= knightAOECost)
+            {
+                canSummonAOE = false;
+                // spawn at player's location
+                knightAOE.transform.position = playerController.transform.position + new Vector3(0, 0.1f, 0);
+                knightAOE.SetActive(true);
+                playerController.UpdatePlayerValuesWithMultiplier();
+
+                // subtract mana
+                currentEnergy = currentEnergy - knightAOECost;
             }
             else
             {

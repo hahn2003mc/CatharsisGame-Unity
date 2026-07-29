@@ -106,6 +106,7 @@ public class GameControllerLaudos : MonoBehaviour
                 psychicSpellAnimationObject.SetActive(false);
                 Kael.SetActive(false);
                 wizardSceneCompleted = false;
+                knightController.canSummonAOE = true;
 
                 saveManager.spawnPointIndicator = "Docks";
                 saveToDisk();
@@ -136,7 +137,8 @@ public class GameControllerLaudos : MonoBehaviour
                 StartCoroutine(WaitAndChangeDirection(Vector2.left, 2f, -1f, 0f));
                 StartCoroutine(WaitAndStartDialogue(CatharinAndKaelDialogue1, 3f));
                 wizardSceneCompleted = true;
-                
+                knightController.canSummonAOE = true;
+
                 saveManager.spawnPointIndicator = "WizardsHouse";
                 saveManager.enteredWizardsHouse = true;
                 saveToDisk();
@@ -163,6 +165,7 @@ public class GameControllerLaudos : MonoBehaviour
                 biscusInteractionCollider.SetActive(true);
                 psychicSpellAnimationObject.SetActive(false);
                 wizardSceneCompleted = false;
+                knightController.canSummonAOE = true;
 
                 saveManager.spawnPointIndicator = "Docks";
                 saveToDisk();

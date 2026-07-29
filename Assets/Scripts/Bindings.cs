@@ -11,6 +11,7 @@ public static class Bindings
     public static int KnightLightAttack = 0;
     public static KeyCode KnightHeavyAttack = KeyCode.Q;
     public static KeyCode KnightSlashAttack = KeyCode.E;
+    public static KeyCode KnightAOE = KeyCode.E;
     public static KeyCode KnightMoveUp = KeyCode.W;
     public static KeyCode KnightMoveLeft = KeyCode.A;
     public static KeyCode KnightMoveDown = KeyCode.S;

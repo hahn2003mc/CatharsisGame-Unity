@@ -18,4 +18,9 @@ public class YSorter : MonoBehaviour
     {
         
     }
+
+    public void OnEnable()
+    {
+        sr.sortingOrder = Mathf.RoundToInt(-transform.position.y * 100);
+    }
 }

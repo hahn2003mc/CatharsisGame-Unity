@@ -72,6 +72,8 @@ public class GameController : MonoBehaviour
         skeletonGuard.SetActive(true);
         Portal.SetActive(false);
 
+        knightController.canSummonAOE = false;
+
         playerController.setCanSwapCharactersTrue();
     }
 

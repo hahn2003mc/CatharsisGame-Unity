@@ -222,6 +222,30 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(ColorEnumerator());
     }
 
+    public void UpdatePlayerValuesWithMultiplier()
+    {
+        knightController.swordDamage = PlayerValues.KnightLightAttackDamage * PlayerValues.KnightAOEMultiplier;
+        knightController.heavyAttackDamage = PlayerValues.KnightHeavyAttackDamage * PlayerValues.KnightAOEMultiplier;
+        knightController.slashAttackDamage = PlayerValues.KnightSlashAttackDamage * PlayerValues.KnightAOEMultiplier;
+
+        wizardController.healingAmount = PlayerValues.WizardHealHealingAmount * PlayerValues.KnightAOEMultiplier;
+        wizardController.spellDamage = PlayerValues.WizardLightAttackDamage * PlayerValues.KnightAOEMultiplier;
+        wizardController.spellSpeed = PlayerValues.WizardLightAttackSpeed * PlayerValues.KnightAOEMultiplier;
+        wizardController.spellLifetime = PlayerValues.KnightLightAttackLifetime * PlayerValues.KnightAOEMultiplier;
+    }
+
+    public void ResetPlayerValues()
+    {
+        knightController.swordDamage = PlayerValues.KnightLightAttackDamage;
+        knightController.heavyAttackDamage = PlayerValues.KnightHeavyAttackDamage;
+        knightController.slashAttackDamage = PlayerValues.KnightSlashAttackDamage;
+
+        wizardController.healingAmount = PlayerValues.WizardHealHealingAmount;
+        wizardController.spellDamage = PlayerValues.WizardLightAttackDamage;
+        wizardController.spellSpeed = PlayerValues.WizardLightAttackSpeed;
+        wizardController.spellLifetime = PlayerValues.KnightLightAttackLifetime;
+    }
+
     public IEnumerator ColorEnumerator()
     {
         //Debug.Log("in color enum");

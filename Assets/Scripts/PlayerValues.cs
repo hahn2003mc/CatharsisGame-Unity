@@ -20,6 +20,8 @@ public static class PlayerValues
     public static float KnightSlashAttackEnergyCost = 100f;
     public static float KnightEnergyRegenRate = 8f;
     public static float KnightParryCost = 100f;
+    public static float KnightAOECost = 50f;
+    public static float KnightAOEMultiplier = 1.5f;
 
     public static float PlayerMaxHealth = 100f;
 }

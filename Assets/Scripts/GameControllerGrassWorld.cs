@@ -123,6 +123,8 @@ public class GameControllerGrassWorld : MonoBehaviour
         Vienna.SetActive(false);
         isSpiderDefeated = false;
         wizardInteracted = false;
+        knightController.canSummonAOE = true;
+
     }
 
     // Update is called once per frame
