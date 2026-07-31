@@ -30,13 +30,13 @@ public class MotherSpiderWebController : MonoBehaviour
         if (knight != null)
         {
             //Debug.Log("KNIGHT entered the web collider");
-            knight.SetSpeedMultiplier(0.5f);
+            knight.moveSpeed = 0.5f;
         }
 
         WizardController wizard = other.GetComponent<WizardController>();
         if (wizard != null)
         {
-            wizard.SetSpeedMultiplier(0.5f);
+            wizard.moveSpeed = 0.5f;
         }
 
         WizardSpell wizardSpell = other.GetComponent<WizardSpell>();
@@ -51,13 +51,13 @@ public class MotherSpiderWebController : MonoBehaviour
         KnightController knight = other.GetComponent<KnightController>();
         if (knight != null)
         {
-            knight.ResetSpeedMultiplier();
+            knight.ResetSpeed();
         }
 
         WizardController wizard = other.GetComponent<WizardController>();
         if (wizard != null)
         {
-            wizard.ResetSpeedMultiplier();
+            wizard.ResetSpeed();
         }
     }
 

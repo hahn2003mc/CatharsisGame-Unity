@@ -88,7 +88,7 @@ public class GameControllerLaudos : MonoBehaviour
                 playerController.transform.position = new Vector3(22.5f, 83.8f, playerController.transform.position.z);
                 knightFormController.SetForm(KnightFormController.KnightForm.Armor);
                 knightFormController.LockForm(false);
-                playerController.setCanSwapCharactersTrue();
+                playerController.setCanSwapCharactersFalse();
                 knightController.setCanAttack(true);
                 knightSword.SetActive(true);
                 wizard.SetActive(false);
@@ -148,7 +148,7 @@ public class GameControllerLaudos : MonoBehaviour
                 playerController.transform.position = new Vector3(22.5f, 83.8f, playerController.transform.position.z);
                 knightFormController.SetForm(KnightFormController.KnightForm.Armor);
                 knightFormController.LockForm(false);
-                playerController.setCanSwapCharactersTrue();
+                playerController.setCanSwapCharactersFalse();
                 knightController.setCanAttack(true);
                 knightSword.SetActive(true);
                 wizard.SetActive(false);
@@ -206,7 +206,11 @@ public class GameControllerLaudos : MonoBehaviour
 
     public void finishDialogueProcessing(Dialogue dialogue)
     {
-        if (dialogue.name == "CatharinAndBiscusDialogue1")
+        if (dialogue.name == "CatharinAndViennaDialogue3")
+        {
+            playerController.setCanSwapCharactersTrue();
+        }
+        else if (dialogue.name == "CatharinAndBiscusDialogue1")
         {
             biscusController.updateInteractionCount(1);
             pauseMovement();

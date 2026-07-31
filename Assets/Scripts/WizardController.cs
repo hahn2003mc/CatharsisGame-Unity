@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -21,18 +22,29 @@ public class WizardController : MonoBehaviour
 
     public float healManaCost;
 
+    public float heavyAttackCost;
+
+    public GameObject WizardAOE;
+    public float buffCost;
+    public float buffSpeedMultiplier;
+    public bool canSummonAOE;
+    public int AOESpellCount;
+
     public float manaRegenRate;
 
     public float currentMana;
 
     public GameObject spellPrefab;
+    public GameObject heavySpellPrefab;
 
     public Transform firePoint;
+    public Transform bookFirePoint;
 
     public float moveX;
 
     public float moveY;
 
+    public GameObject wizardBook;
     public Light2D WizardBookLight;
 
     public GameObject healAnimationObject;
@@ -46,6 +58,9 @@ public class WizardController : MonoBehaviour
     public float spellDamage;
     public float spellSpeed;
     public float spellLifetime;
+    public float heavySpellDamage;
+    public float heavySpellSpeed;
+    public float heavySpellLifetime;
 
 
     void Start()
@@ -68,7 +83,18 @@ public class WizardController : MonoBehaviour
         healingAmount = PlayerValues.WizardHealHealingAmount;
         spellDamage = PlayerValues.WizardLightAttackDamage;
         spellSpeed = PlayerValues.WizardLightAttackSpeed;
-        spellLifetime = PlayerValues.KnightLightAttackLifetime;
+        spellLifetime = PlayerValues.WizardLightAttackLifetime;
+        heavyAttackCost = PlayerValues.WizardHeavyAttackCost;
+        heavySpellDamage = PlayerValues.WizardHeavyAttackDamage;
+        heavySpellSpeed = PlayerValues.WizardHeavyAttackSpeed;
+        heavySpellLifetime = PlayerValues.WizardHeavyAttackLifetime;
+        buffCost = PlayerValues.WizardAOECost;
+        buffSpeedMultiplier = PlayerValues.WizardAOESpeedMultiplier;
+        moveSpeed = PlayerValues.WizardMoveSpeed;
+        WizardAOE.SetActive(false);
+        AOESpellCount = PlayerValues.WizardAOESpellCount;
+
+        bookFirePoint = wizardBook.GetComponent<Transform>();
 
         // canMove = true;
     }
@@ -97,7 +123,7 @@ public class WizardController : MonoBehaviour
         moveX = Input.GetAxisRaw("Horizontal");
         moveY = Input.GetAxisRaw("Vertical");
 
-        rb.linearVelocity = new Vector2(moveX, moveY) * baseMoveSpeed * speedMultiplier;
+        rb.linearVelocity = new Vector2(moveX, moveY) * moveSpeed;
         mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
 
 
@@ -198,25 +224,74 @@ public class WizardController : MonoBehaviour
                 Debug.Log("not enough mana!");
             }
         }
-    }
+        if (Input.GetMouseButtonDown(Bindings.WizardHeavyAttack))
+        {
+            if (currentMana >= heavyAttackCost)
+            {
+                currentMana = currentMana - heavyAttackCost;
 
-    private float baseMoveSpeed = 3f;
-    private float speedMultiplier = 1f;
+                wizardBook.GetComponent<Animator>().Play("Red");
 
-    public void SetSpeedMultiplier(float multiplier)
-    {
-        speedMultiplier = multiplier;
-    }
+                Vector3 mouseWorld = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                mouseWorld.z = 0f;
 
-    public void ResetSpeedMultiplier()
-    {
-        speedMultiplier = 1f;
+                Vector2 direction = (mouseWorld - firePoint.position).normalized;
+
+                GameObject spellProjectile = Instantiate(heavySpellPrefab, firePoint.position, Quaternion.identity);
+
+                WizardHeavySpell p = spellProjectile.GetComponent<WizardHeavySpell>();
+                p.Initialize(heavySpellDamage, direction, heavySpellSpeed, heavySpellLifetime);
+            }
+            else
+            {
+                Debug.Log("not enough mana!");
+            }
+        }
+        if (Input.GetKeyDown(Bindings.WizardBuff) && canSummonAOE)
+        {
+            if (currentMana >= buffCost)
+            {
+                canSummonAOE = false;
+
+                currentMana = currentMana - buffCost;
+
+                WizardAOE.SetActive(true);
+                WizardAOE.transform.position = playerController.transform.position + new Vector3(0, 0.1f, 0);
+
+                playerController.UpdatePlayerSpeedsWithMultiplier();
+
+                Vector3 mouseWorld = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                mouseWorld.z = 0f;
+
+                Vector2 direction = (mouseWorld - firePoint.position).normalized;
+
+
+                int i = 0;
+                while (i < AOESpellCount) {
+                    GameObject spellProjectile = Instantiate(heavySpellPrefab, firePoint.position + new Vector3(0, i-2, 0), Quaternion.identity);
+
+                    WizardHeavySpell p = spellProjectile.GetComponent<WizardHeavySpell>();
+
+                    p.Initialize((float)Math.Floor(heavySpellDamage/2), direction, heavySpellSpeed, heavySpellLifetime);
+                    i++;
+                }
+            }
+            else
+            {
+                Debug.Log("not enough mana!");
+            }
+        }
     }
 
     void ManaDisplay()
     {
         float percentage = currentMana / maxMana;
         WizardBookLight.intensity = percentage * 5;
+    }
+
+    public void ResetSpeed()
+    {
+        moveSpeed = PlayerValues.WizardMoveSpeed;
     }
 
     void OnEnable()

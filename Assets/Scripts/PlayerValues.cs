@@ -9,7 +9,15 @@ public static class PlayerValues
     public static float WizardHealHealingAmount = 20f;
     public static float WizardLightAttackDamage = 15f;
     public static float WizardLightAttackSpeed = 10f;
-    public static float KnightLightAttackLifetime = 2f;
+    public static float WizardLightAttackLifetime = 2f;
+    public static float WizardHeavyAttackCost = 75f;
+    public static float WizardHeavyAttackDamage = 50f;
+    public static float WizardHeavyAttackSpeed = 7.5f;
+    public static float WizardHeavyAttackLifetime = 4f;
+    public static float WizardAOECost = 100f;
+    public static float WizardAOESpeedMultiplier = 1.5f;
+    public static bool WizardAOESpeedMultiplierBuffed = false;
+    public static int WizardAOESpellCount = 5;
 
     public static float KnightLightAttackDamage = 35f;
     public static float KnightHeavyAttackDamage = 75f;
@@ -24,4 +32,6 @@ public static class PlayerValues
     public static float KnightAOEMultiplier = 1.5f;
 
     public static float PlayerMaxHealth = 100f;
+    public static float KnightMoveSpeed = 3f;
+    public static float WizardMoveSpeed = 3f;
 }

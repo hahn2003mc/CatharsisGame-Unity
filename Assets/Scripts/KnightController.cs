@@ -101,6 +101,7 @@ public class KnightController : MonoBehaviour
         knightAOEMultiplier = PlayerValues.KnightAOEMultiplier;
         knightAOEAnimator = knightAOE.GetComponent<Animator>();
         knightAOE.SetActive(false);
+        moveSpeed = PlayerValues.KnightMoveSpeed;
     }
 
     // Update is called once per frame
@@ -143,7 +144,7 @@ public class KnightController : MonoBehaviour
         moveX = Input.GetAxisRaw("Horizontal");
         moveY = Input.GetAxisRaw("Vertical");
 
-        rb.linearVelocity = new Vector2(moveX, moveY) * baseMoveSpeed * speedMultiplier;
+        rb.linearVelocity = new Vector2(moveX, moveY) * moveSpeed;
         mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
 
 
@@ -330,6 +331,11 @@ public class KnightController : MonoBehaviour
         ApplyFacingDirection();
     }
 
+    public void ResetSpeed()
+    {
+        moveSpeed = PlayerValues.KnightMoveSpeed;
+    }
+
     public void ApplyFacingDirection()
     {
         if (playerController == null) { return; }
@@ -369,21 +375,6 @@ public class KnightController : MonoBehaviour
             }
         }
         */
-    }
-
-    private float baseMoveSpeed = 3f;
-    private float speedMultiplier = 1f;
-
-    public void SetSpeedMultiplier(float multiplier)
-    {
-        Debug.Log("setting speed multiplier to " + multiplier);
-        speedMultiplier = multiplier;
-    }
-
-    public void ResetSpeedMultiplier()
-    {
-        Debug.Log("resetting speed multiplier to " + 1);
-        speedMultiplier = 1f;
     }
 
     void EnergyDisplay()

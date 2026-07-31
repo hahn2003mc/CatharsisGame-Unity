@@ -231,7 +231,12 @@ public class PlayerController : MonoBehaviour
         wizardController.healingAmount = PlayerValues.WizardHealHealingAmount * PlayerValues.KnightAOEMultiplier;
         wizardController.spellDamage = PlayerValues.WizardLightAttackDamage * PlayerValues.KnightAOEMultiplier;
         wizardController.spellSpeed = PlayerValues.WizardLightAttackSpeed * PlayerValues.KnightAOEMultiplier;
-        wizardController.spellLifetime = PlayerValues.KnightLightAttackLifetime * PlayerValues.KnightAOEMultiplier;
+        wizardController.spellLifetime = PlayerValues.WizardLightAttackLifetime * PlayerValues.KnightAOEMultiplier;
+        wizardController.heavySpellDamage = PlayerValues.WizardHeavyAttackDamage * PlayerValues.KnightAOEMultiplier;
+        wizardController.heavySpellSpeed = PlayerValues.WizardHeavyAttackSpeed * PlayerValues.KnightAOEMultiplier;
+        wizardController.heavySpellLifetime = PlayerValues.WizardHeavyAttackLifetime * PlayerValues.KnightAOEMultiplier;
+        PlayerValues.WizardAOESpeedMultiplierBuffed = true;
+        wizardController.AOESpellCount = (int)(PlayerValues.WizardAOESpellCount * PlayerValues.KnightAOEMultiplier);
     }
 
     public void ResetPlayerValues()
@@ -243,7 +248,32 @@ public class PlayerController : MonoBehaviour
         wizardController.healingAmount = PlayerValues.WizardHealHealingAmount;
         wizardController.spellDamage = PlayerValues.WizardLightAttackDamage;
         wizardController.spellSpeed = PlayerValues.WizardLightAttackSpeed;
-        wizardController.spellLifetime = PlayerValues.KnightLightAttackLifetime;
+        wizardController.spellLifetime = PlayerValues.WizardLightAttackLifetime;
+        wizardController.heavySpellSpeed = PlayerValues.WizardHeavyAttackDamage;
+        wizardController.heavySpellSpeed = PlayerValues.WizardHeavyAttackSpeed;
+        wizardController.heavySpellLifetime = PlayerValues.WizardHeavyAttackLifetime;
+        PlayerValues.WizardAOESpeedMultiplierBuffed = false;
+        wizardController.AOESpellCount = PlayerValues.WizardAOESpellCount;
+    }
+
+    public void UpdatePlayerSpeedsWithMultiplier()
+    {
+        if (PlayerValues.WizardAOESpeedMultiplierBuffed)
+        {
+            knightController.moveSpeed = PlayerValues.KnightMoveSpeed * (PlayerValues.WizardAOESpeedMultiplier * PlayerValues.KnightAOEMultiplier);
+            wizardController.moveSpeed = PlayerValues.WizardMoveSpeed * (PlayerValues.WizardAOESpeedMultiplier * PlayerValues.KnightAOEMultiplier);
+        }
+        else
+        {
+            knightController.moveSpeed = PlayerValues.KnightMoveSpeed * PlayerValues.WizardAOESpeedMultiplier;
+            wizardController.moveSpeed = PlayerValues.WizardMoveSpeed * PlayerValues.WizardAOESpeedMultiplier;
+        }
+    }
+
+    public void ResetPlayerSpeeds()
+    {
+        knightController.moveSpeed = PlayerValues.KnightMoveSpeed;
+        wizardController.moveSpeed = PlayerValues.WizardMoveSpeed;
     }
 
     public IEnumerator ColorEnumerator()
