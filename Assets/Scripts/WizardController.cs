@@ -235,9 +235,9 @@ public class WizardController : MonoBehaviour
                 Vector3 mouseWorld = mainCamera.ScreenToWorldPoint(Input.mousePosition);
                 mouseWorld.z = 0f;
 
-                Vector2 direction = (mouseWorld - firePoint.position).normalized;
+                Vector2 direction = (mouseWorld - wizardBook.transform.position).normalized;
 
-                GameObject spellProjectile = Instantiate(heavySpellPrefab, firePoint.position, Quaternion.identity);
+                GameObject spellProjectile = Instantiate(heavySpellPrefab, wizardBook.transform.position, Quaternion.identity);
 
                 WizardHeavySpell p = spellProjectile.GetComponent<WizardHeavySpell>();
                 p.Initialize(heavySpellDamage, direction, heavySpellSpeed, heavySpellLifetime);
@@ -263,12 +263,12 @@ public class WizardController : MonoBehaviour
                 Vector3 mouseWorld = mainCamera.ScreenToWorldPoint(Input.mousePosition);
                 mouseWorld.z = 0f;
 
-                Vector2 direction = (mouseWorld - firePoint.position).normalized;
+                Vector2 direction = (mouseWorld - firePoint.transform.position).normalized;
 
 
                 int i = 0;
                 while (i < AOESpellCount) {
-                    GameObject spellProjectile = Instantiate(heavySpellPrefab, firePoint.position + new Vector3(0, i-2, 0), Quaternion.identity);
+                    GameObject spellProjectile = Instantiate(heavySpellPrefab, firePoint.transform.position + new Vector3(0, i-2, 0), Quaternion.identity);
 
                     WizardHeavySpell p = spellProjectile.GetComponent<WizardHeavySpell>();
 

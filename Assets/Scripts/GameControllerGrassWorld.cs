@@ -144,6 +144,7 @@ public class GameControllerGrassWorld : MonoBehaviour
     IEnumerator HandleDeath()
     {
         DeathScreen.SetActive(true);
+        knightController.setCanAttack(true);
         if (!puzzleCompleted)
         {
             playerController.transform.position = areaCampFire.transform.position;

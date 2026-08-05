@@ -25,4 +25,6 @@ public static class Bindings
 
     public static KeyCode SwapCharacter = KeyCode.LeftShift;
 
+    public static KeyCode AbilitiesMenu = KeyCode.F1;
+
 }

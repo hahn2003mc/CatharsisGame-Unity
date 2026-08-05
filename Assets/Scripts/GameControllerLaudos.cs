@@ -29,6 +29,7 @@ public class GameControllerLaudos : MonoBehaviour
     public Dialogue CatharinAndViennaDialogue3;
     public Dialogue CatharinAndBiscusDialogue2;
     public Dialogue CatharinAndKaelDialogue1;
+    public Dialogue CatharinAndKaelDialogue3;
 
     public GameObject mainCamera;
 
@@ -40,6 +41,7 @@ public class GameControllerLaudos : MonoBehaviour
 
     public GameObject Biscus;
     public GameObject Kael;
+    public KaelController kaelController;
     public BiscusController biscusController;
 
     public GameObject areaCampFire;
@@ -49,8 +51,14 @@ public class GameControllerLaudos : MonoBehaviour
     public GameObject FadePanel;
     public float fadeTime = 2f;
 
+    public GameObject SunsetPanel;
+
     public GameObject biscusInteractionCollider;
     public GameObject psychicSpellAnimationObject;
+
+    public GameObject beachBarricade;
+    public GameObject beachBox;
+    public GameObject KaelsNote;
 
     public GameObject psychicPinkPanel;
 
@@ -78,6 +86,10 @@ public class GameControllerLaudos : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        SunsetPanel.SetActive(false);
+        beachBarricade.SetActive(false);
+        beachBox.SetActive(false);
+        KaelsNote.SetActive(false);
         saveManager.Load();
         Debug.Log(saveManager.spawnPointIndicator);
         Debug.Log(saveManager.enteredWizardsHouse);
@@ -107,6 +119,8 @@ public class GameControllerLaudos : MonoBehaviour
                 Kael.SetActive(false);
                 wizardSceneCompleted = false;
                 knightController.canSummonAOE = true;
+                kaelController = Kael.GetComponent<KaelController>();
+                kaelController.canInteract = false;
 
                 saveManager.spawnPointIndicator = "Docks";
                 saveToDisk();
@@ -138,6 +152,8 @@ public class GameControllerLaudos : MonoBehaviour
                 StartCoroutine(WaitAndStartDialogue(CatharinAndKaelDialogue1, 3f));
                 wizardSceneCompleted = true;
                 knightController.canSummonAOE = true;
+                kaelController = Kael.GetComponent<KaelController>();
+                kaelController.canInteract = false;
 
                 saveManager.spawnPointIndicator = "WizardsHouse";
                 saveManager.enteredWizardsHouse = true;
@@ -166,6 +182,8 @@ public class GameControllerLaudos : MonoBehaviour
                 psychicSpellAnimationObject.SetActive(false);
                 wizardSceneCompleted = false;
                 knightController.canSummonAOE = true;
+                kaelController = Kael.GetComponent<KaelController>();
+                kaelController.canInteract = false;
 
                 saveManager.spawnPointIndicator = "Docks";
                 saveToDisk();
@@ -190,6 +208,7 @@ public class GameControllerLaudos : MonoBehaviour
     IEnumerator HandleDeath()
     {
         DeathScreen.SetActive(true);
+        knightController.setCanAttack(true);
 
         playerController.health = playerController.maxHealth;
         playerController.invincible = true;
@@ -216,11 +235,32 @@ public class GameControllerLaudos : MonoBehaviour
             pauseMovement();
             applyBiscusEffects();
         }
-        else if (dialogue.name == "CatharinAndKaelDialogue1") 
+        else if (dialogue.name == "CatharinAndKaelDialogue1")
         {
             wizardNPC.SetActive(false);
             Kael.transform.position = new Vector3(-52.1f, 95.7f, playerController.transform.position.z);
+            kaelController.canInteract = true;
         }
+        else if (dialogue.name == "CatharinAndKaelDialogue2")
+        {
+            SunsetPanel.SetActive(true);
+            StartCoroutine(WaitAndStartDialogue(CatharinAndKaelDialogue3, 3f));
+        }
+        else if (dialogue.name == "CatharinAndKaelDialogue3")
+        {
+            StartCoroutine(FadeToBlack());
+            StartCoroutine(waitAndResetScene(5f));
+            beachBarricade.SetActive(true);
+            beachBox.SetActive(true);
+            KaelsNote.SetActive(true);
+        }
+        else if (dialogue.name == "KaelsNoteDialogue1") 
+        {
+            KaelsNote.SetActive(false);
+            beachBarricade.SetActive(false);
+            // can enter Kael's mansion true
+        }
+
     }
 
     public void transferToWizardsHouseScene()
@@ -233,6 +273,17 @@ public class GameControllerLaudos : MonoBehaviour
 
     private IEnumerator waitForFadeToFinish() {
         yield return StartCoroutine(FadeToBlackAndTransitionScene());
+    }
+
+    private IEnumerator waitAndResetScene(float time)
+    {
+        yield return new WaitForSeconds(time);
+        playerController.transform.position = new Vector3(-50f, 100f, playerController.transform.position.z);
+        SunsetPanel.SetActive(false);
+        FadePanel.SetActive(false);
+        // save
+        Kael.SetActive(false);
+        // Kael's letter set active
     }
 
     public void finishScene()
@@ -322,10 +373,48 @@ public class GameControllerLaudos : MonoBehaviour
         wizardController.ApplyFacingDirection();
     }
 
+    public IEnumerator FadeToBlack()
+    {
+        Image img = FadePanel.GetComponent<Image>();
+
+        FadePanel.SetActive(true);
+
+        float elapsed = 0f;
+
+        knightController.lockCameraToPlayer = false;
+
+        Color startColor = img.color;
+
+        while (elapsed < fadeTime)
+        {
+            elapsed += Time.deltaTime;
+
+            float t = Mathf.Clamp01(elapsed / fadeTime);
+
+            // Smooth easing
+            float smoothT = Mathf.SmoothStep(0f, 1f, t);
+
+            // Fade UI
+            img.color = new Color(
+                startColor.r,
+                startColor.g,
+                startColor.b,
+                smoothT
+            );
+
+            yield return null;
+        }
+
+        // Ensure final values are exact
+        img.color = new Color(startColor.r, startColor.g, startColor.b, 1f);
+    }
+
 
     public IEnumerator FadeToBlackAndTransitionScene()
     {
         Image img = FadePanel.GetComponent<Image>();
+
+        FadePanel.SetActive(true);
 
         float elapsed = 0f;
 

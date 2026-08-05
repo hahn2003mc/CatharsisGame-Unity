@@ -205,6 +205,8 @@ public class GameController : MonoBehaviour
     IEnumerator HandleDeath()
     {
         DeathScreen.SetActive(true);
+        knightController.setCanAttack(true);
+
         if (dragonController.health <= 0) {
             playerController.transform.position = areaCampFire2.transform.position;
             dragonController.gameObject.SetActive(false);

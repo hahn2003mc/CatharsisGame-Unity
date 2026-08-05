@@ -47,8 +47,11 @@ public class PlayerController : MonoBehaviour
     public GameControllerGrassWorld gameControllerGrassWorld;
     public GameControllerLaudos gameControllerLaudos;
 
+    public GameObject Abilities;
+
     void Start()
     {
+        Abilities.SetActive(false);
         knightController = knight.GetComponent<KnightController>();
         knightFormController = knight.GetComponent<KnightFormController>();
         wizardController = wizard.GetComponent<WizardController>();
@@ -77,6 +80,8 @@ public class PlayerController : MonoBehaviour
         HandleCharacter();
 
         RegenerateAbilities();
+
+        HandleMenus();
     }
 
     void HandleCharacter()
@@ -100,6 +105,15 @@ public class PlayerController : MonoBehaviour
             wizard.transform.localPosition = Vector3.zero;
         }
     }
+
+    void HandleMenus()
+    {
+        if (Input.GetKeyDown(Bindings.AbilitiesMenu))
+        {
+            Abilities.SetActive(!Abilities.activeSelf);
+        }
+    }
+
 
     void RegenerateAbilities()
     {
